@@ -9,11 +9,11 @@
       padding:0;
     }
 
-        canvas{
-          background:black;
-          margin:0;
-          padding:0;
-        }
+    canvas{
+        background:black;
+        margin:0;
+        padding:0;
+      }
     </style>
 
 <script>
@@ -25,6 +25,10 @@ window.onload = function(){
 let canvas = document.getElementById('CodyEnvCanvas');
 let canvasContext = canvas.getContext('2d');
 
+/*canvas.addEventListener("click", function(event){
+  console.log("canvas clicked");
+});
+*/
 // create circle array
 let dotList = [];
 const maxSize = 15;
@@ -33,11 +37,12 @@ const b = 80;
 
 for(let i = 0; i<8; i++){
   for(let j = 0; j<8; j++){
-    dotList.push(new dot(i*80, j*80, 50, #FFFFFF));
+    dotList.push(new dot(i*80, j*80, 50, "#FFFFFF"));
   }
 }
 
   requestAnimationFrame(run);
+  //clear canvas and update stuff (later...)
   function run(){
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -53,12 +58,12 @@ for(let i = 0; i<8; i++){
     this.xPos = x;
     this.yPos = x;
     this.radius = r;
-    this.color - c;
+    this.color = c;
     // ... and display
     this.display = function(){
       canvasContext.fillStyle = this.color;
       canvasContext.beginPath();
-      canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI/2, true);
+      canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI*2, true);
       canvasContext.fill();
       canvasContext.closePath();
     }
@@ -67,7 +72,6 @@ for(let i = 0; i<8; i++){
 
 }
 
-}
 // end javascript
 </script>
 
