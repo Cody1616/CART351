@@ -1,0 +1,44 @@
+<html>
+<head>
+
+<title> Environment </title>
+
+    <style>
+
+        canvas{
+          background:black;
+          margin:0;
+          padding:0;
+        }
+    </style>
+
+<script>
+
+// begin javascript stuff
+window.onload = function(){
+// code stufffff
+
+
+
+
+
+
+
+
+
+
+
+
+}
+// end javascript
+</script>
+
+</head>
+
+<body>
+
+  <canvas id = "CodyEnvCanvas" width="640" height="480">
+  </canvas>
+
+</body>
+</html>
