@@ -35,11 +35,17 @@ const maxSize = 15;
 const minSize = 10;
 const b = 80;
 
-for(let i = 0; i<8; i++){
-  for(let j = 0; j<8; j++){
-    dotList.push(new dot(i*80, j*80, 50, "#FFFFFF"));
+x = 0;
+y = 0;
+for(let i = 0; i<64; i++){
+  dotList.push(new dot(x*80, y*80, 15, "#FFFFFF"));
+  if(x>=8){
+    x = 0;
+    y++;
   }
 }
+
+
 
   requestAnimationFrame(run);
   //clear canvas and update stuff (later...)
@@ -47,8 +53,9 @@ for(let i = 0; i<8; i++){
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
     requestAnimationFrame(run);
-    for(let i = 0; i < dotList.length; i++){
-      dotList[i].display();
+    for(let k = 0; k < dotList.length; k++){
+      dotList[k].display();
+      console.log(dotList[k].xPos, dotList[k].yPos)
     }
   }
 
