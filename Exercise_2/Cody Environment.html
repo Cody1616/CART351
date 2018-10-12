@@ -1,0 +1,82 @@
+<html>
+<head>
+
+<title> Environment </title>
+
+    <style>
+    body{
+      margin:0;
+      padding:0;
+    }
+
+        canvas{
+          background:black;
+          margin:0;
+          padding:0;
+        }
+    </style>
+
+<script>
+
+// begin javascript stuff
+window.onload = function(){
+// code stufffff
+
+let canvas = document.getElementById('CodyEnvCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// create circle array
+let dotList = [];
+const maxSize = 15;
+const minSize = 10;
+const b = 80;
+
+for(let i = 0; i<8; i++){
+  for(let j = 0; j<8; j++){
+    dotList.push(new dot(i*80, j*80, 50, #FFFFFF));
+  }
+}
+
+  requestAnimationFrame(run);
+  function run(){
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+    requestAnimationFrame(run);
+    for(let i = 0; i < dotList.length; i++){
+      dotList[i].display();
+    }
+  }
+
+// building a circle
+  function dot(x, y, r, c){
+    // initialize
+    this.xPos = x;
+    this.yPos = x;
+    this.radius = r;
+    this.color - c;
+    // ... and display
+    this.display = function(){
+      canvasContext.fillStyle = this.color;
+      canvasContext.beginPath();
+      canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI/2, true);
+      canvasContext.fill();
+      canvasContext.closePath();
+    }
+
+  }
+
+}
+
+}
+// end javascript
+</script>
+
+</head>
+
+<body>
+
+  <canvas id = "CodyEnvCanvas" width="640" height="480">
+  </canvas>
+
+</body>
+</html>
