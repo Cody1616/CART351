@@ -25,31 +25,36 @@ window.onload = function(){
 let canvas = document.getElementById('CodyEnvCanvas');
 let canvasContext = canvas.getContext('2d');
 
-canvas.addEventListener("mousemove", function(event){
-  console.log(event.clientX, event.clientY);
-  for(let i = 0; i<dotList.length; i++){
-  dotList[i].cursorDist(event);
-}
-});
+
 
 canvas.addEventListener("click", function(event){
   let clickedCircle = false;
   for(let i = 0; i<dotList.length; i++){
-    if(dotList[i].checkIfClickIn(event)){
+    if(dotList[i].checkIfClickIn(event)==true){
       // if a circle is clicked, perform action and exit loop
-      console.log("clicked ", i, );
+      dotList[i].clickIn();
       clickedCircle = true;
       break;
     }
+  }
+  console.log(clickedCircle);
   if (!clickedCircle){
     //if the background was clicked, increase the aura of lit up circles
+
       auraMult+=0.5;
       if(auraMult >=3){
         auraMult=0.5;
       }
   }
-}
-
+  for(let i = 0; i<dotList.length; i++){
+    dotList[i].cursorDist(event);
+  }
+});
+canvas.addEventListener("mousemove", function(event){
+  console.log(event.clientX, event.clientY);
+  for(let i = 0; i<dotList.length; i++){
+    dotList[i].cursorDist(event);
+  }
 });
 
 // create circle array
@@ -78,7 +83,7 @@ for(let i = 0; i<8; i++){
     requestAnimationFrame(run);
     for(let k = 0; k < dotList.length; k++){
       dotList[k].display();
-      //dotList[k].cursorDist();
+      dotList[k].update();
     }
   }
 
@@ -90,6 +95,8 @@ for(let i = 0; i<8; i++){
     this.radius = r;
     this.color = c;
     this.state = 0;
+    this.radMult = 0;
+    this.defaultRad = 15;
     // ... and display
     this.display = function(){
       canvasContext.fillStyle = this.color;
@@ -99,26 +106,40 @@ for(let i = 0; i<8; i++){
       canvasContext.closePath();
     }
     this.update = function(){
+      switch(this.state){
+        // case 0 is default
+        case 0:this.radMult = 1;
+        break;
+        //case 1 is shut off
+        case 1: this.radMult = 0.5;
+        break;
+        //case 2 is brighter
+        case 2: this.radMult = 1.5;
+        break;
+      }
+      this.radius = this.defaultRad*this.radMult;
 
     }
     this.cursorDist = function(event){
       let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
-      let a = auraMult*aura;
-      if(h<a/8){
-        this.color = "#B9B9B9";
-      }
-      else if(h<a/4){
-        this.color = "#939393";
-      }
-      else if(h<a/2){
-        this.color = "#606060";
-      }
-      else if(h<(a*3)/4){
-        this.color = "#373737";
-      }
-      else {
-        this.color = "#1C1C1C";
-      }
+      let a = auraMult*aura+this.radius;
+
+        if(h<a/8){
+          this.color = "#B9B9B9";
+        }
+        else if(h<a/4){
+          this.color = "#939393";
+        }
+        else if(h<a/2){
+          this.color = "#606060";
+        }
+        else if(h<(a*3)/4){
+          this.color = "#373737";
+        }
+        else {
+          this.color = "#1C1C1C";
+        }
+
       console.log("AURAS ", aura, auraMult, a);
     }
     this.checkIfClickIn = function(event){
@@ -132,14 +153,11 @@ for(let i = 0; i<8; i++){
     }
     this.clickIn = function(){
       this.state++;
-      if (this.state>=2){
+      if (this.state>2){
         this.state = 0;
       }
-
     }
-
-
-}
+  }
 }
 
 
