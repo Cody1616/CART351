@@ -78,11 +78,21 @@ for(let i = 0; i<8; i++){
       canvasContext.closePath();
     }
     this.cursorDist = function(event){
-      if(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos)>60){
-        this.color = "#000000";
+      let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
+      if(h<20){
+        this.color = "#B9B9B9";
       }
-      else{
-        this.color = "#FFFFFF";
+      else if(h<40){
+        this.color = "#939393";
+      }
+      else if(h<60){
+        this.color = "#606060";
+      }
+      else if(h<80){
+        this.color = "#373737";
+      }
+      else {
+        this.color = "#1C1C1C";
       }
 
 
