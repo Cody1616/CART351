@@ -25,20 +25,25 @@ window.onload = function(){
 let canvas = document.getElementById('CodyEnvCanvas');
 let canvasContext = canvas.getContext('2d');
 
-/*canvas.addEventListener("click", function(event){
-  console.log("canvas clicked");
+canvas.addEventListener("mousemove", function(event){
+  console.log(event.clientX, event.clientY);
+  for(let i = 0; i<dotList.length; i++){
+  dotList[i].cursorDist(event);
+}
 });
-*/
+
 // create circle array
 let dotList = [];
 const maxSize = 15;
 const minSize = 10;
 const b = 80;
+const aura = 200;
+let auraMult = 1;
+
 
 for(let i = 0; i<8; i++){
   for(let j = 0; j<8; j++){
     dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
-    console.log(i, j, i*b, j*b);
     //current i and j values, and x and y values assigned to new dots/circles
   }
 }
@@ -53,6 +58,7 @@ for(let i = 0; i<8; i++){
     requestAnimationFrame(run);
     for(let k = 0; k < dotList.length; k++){
       dotList[k].display();
+      //dotList[k].cursorDist();
     }
   }
 
@@ -71,10 +77,21 @@ for(let i = 0; i<8; i++){
       canvasContext.fill();
       canvasContext.closePath();
     }
+    this.cursorDist = function(event){
+      if(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos)>60){
+        this.color = "#000000";
+      }
+      else{
+        this.color = "#FFFFFF";
+      }
 
-  }
+
+    }
+
 
 }
+}
+
 
 // end javascript
 </script>
