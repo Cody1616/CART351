@@ -35,13 +35,11 @@ const maxSize = 15;
 const minSize = 10;
 const b = 80;
 
-x = 0;
-y = 0;
-for(let i = 0; i<64; i++){
-  dotList.push(new dot(x*80, y*80, 15, "#FFFFFF"));
-  if(x>=8){
-    x = 0;
-    y++;
+for(let i = 0; i<8; i++){
+  for(let j = 0; j<8; j++){
+    dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
+    console.log(i, j, i*b, j*b);
+    //current i and j values, and x and y values assigned to new dots/circles
   }
 }
 
@@ -55,7 +53,6 @@ for(let i = 0; i<64; i++){
     requestAnimationFrame(run);
     for(let k = 0; k < dotList.length; k++){
       dotList[k].display();
-      console.log(dotList[k].xPos, dotList[k].yPos)
     }
   }
 
@@ -63,7 +60,7 @@ for(let i = 0; i<64; i++){
   function dot(x, y, r, c){
     // initialize
     this.xPos = x;
-    this.yPos = x;
+    this.yPos = y;
     this.radius = r;
     this.color = c;
     // ... and display
@@ -86,7 +83,7 @@ for(let i = 0; i<64; i++){
 
 <body>
 
-  <canvas id = "CodyEnvCanvas" width="640" height="480">
+  <canvas id = "CodyEnvCanvas" width="640" height="640">
   </canvas>
 
 </body>
