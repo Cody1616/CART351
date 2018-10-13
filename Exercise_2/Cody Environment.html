@@ -2,79 +2,68 @@
 <head>
 
 <title> Environment </title>
-
     <style>
     body{
       margin:0;
       padding:0;
     }
-
     canvas{
         background:black;
         margin:0;
         padding:0;
       }
     </style>
-
 <script>
-
-// begin javascript stuff
-window.onload = function(){
-// code stufffff
-
-let canvas = document.getElementById('CodyEnvCanvas');
-let canvasContext = canvas.getContext('2d');
-
-
-
-canvas.addEventListener("click", function(event){
-  let clickedCircle = false;
-  for(let i = 0; i<dotList.length; i++){
-    if(dotList[i].checkIfClickIn(event)==true){
-      // if a circle is clicked, perform action and exit loop
-      dotList[i].clickIn();
-      clickedCircle = true;
-      break;
-    }
-  }
-  console.log(clickedCircle);
-  if (!clickedCircle){
-    //if the background was clicked, increase the aura of lit up circles
-
-      auraMult+=0.5;
-      if(auraMult >=3){
-        auraMult=0.5;
+  // begin javascript stuff
+  window.onload = function(){
+  // code stufffff
+  let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let canvas = document.getElementById('CodyEnvCanvas');
+  let canvasContext = canvas.getContext('2d');
+  // init canvas
+  canvas.addEventListener("click", function(event){
+    let clickedCircle = false;
+    for(let i = 0; i<dotList.length; i++){
+      if(dotList[i].checkIfClickIn(event)==true){
+        // if a circle is clicked, perform action and exit loop
+        dotList[i].clickIn();
+        clickedCircle = true;
+        break;
       }
-  }
-  for(let i = 0; i<dotList.length; i++){
-    dotList[i].cursorDist(event);
-  }
-});
-canvas.addEventListener("mousemove", function(event){
-  console.log(event.clientX, event.clientY);
-  for(let i = 0; i<dotList.length; i++){
-    dotList[i].cursorDist(event);
-  }
-});
-
-// create circle array
-let dotList = [];
-const maxSize = 15;
-const minSize = 10;
-const b = 80;
-const aura = 200;
-let auraMult = 1;
-
-
-for(let i = 0; i<8; i++){
+    }
+    console.log(clickedCircle);
+    if (!clickedCircle){
+      //if the background was clicked, increase the aura of lit up circles
+        auraMult+=0.5;
+        if(auraMult >=3){
+          auraMult=0.5;
+        }
+    }
+    for(let i = 0; i<dotList.length; i++){
+      dotList[i].cursorDist(event);
+    }
+  });
+  canvas.addEventListener("mousemove", function(event){
+    console.log(event.clientX, event.clientY);
+    for(let i = 0; i<dotList.length; i++){
+      dotList[i].cursorDist(event);
+    }
+  });
+  // create circle array
+  let dotList = [];
+  const maxSize = 15;
+  const minSize = 10;
+  const b = 80;
+  const aura = 200;
+  let auraMult = 1;
+//create new dots
+  for(let i = 0; i<8; i++){
   for(let j = 0; j<8; j++){
     dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
+    dotList[i].snd = new Sound("SFX/BirdWing.wav");
     //current i and j values, and x and y values assigned to new dots/circles
   }
 }
-
-
-
   requestAnimationFrame(run);
   //clear canvas and update stuff (later...)
   function run(){
@@ -86,90 +75,95 @@ for(let i = 0; i<8; i++){
       dotList[k].update();
     }
   }
-
 // building a circle
   function dot(x, y, r, c){
-    // initialize
-    this.xPos = x;
-    this.yPos = y;
-    this.radius = r;
-    this.color = c;
-    this.state = 0;
-    this.radMult = 0;
-    this.defaultRad = 15;
-    // ... and display
-    this.display = function(){
-      canvasContext.fillStyle = this.color;
-      canvasContext.beginPath();
-      canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI*2, true);
-      canvasContext.fill();
-      canvasContext.closePath();
-    }
-    this.update = function(){
-      switch(this.state){
-        // case 0 is default
-        case 0:this.radMult = 1;
-        break;
-        //case 1 is shut off
-        case 1: this.radMult = 0.5;
-        break;
-        //case 2 is brighter
-        case 2: this.radMult = 1.5;
-        break;
-      }
-      this.radius = this.defaultRad*this.radMult;
-
-    }
-    this.cursorDist = function(event){
-      let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
-      let a = auraMult*aura+this.radius;
-
-        if(h<a/8){
-          this.color = "#B9B9B9";
-        }
-        else if(h<a/4){
-          this.color = "#939393";
-        }
-        else if(h<a/2){
-          this.color = "#606060";
-        }
-        else if(h<(a*3)/4){
-          this.color = "#373737";
-        }
-        else {
-          this.color = "#1C1C1C";
-        }
-
-      console.log("AURAS ", aura, auraMult, a);
-    }
-    this.checkIfClickIn = function(event){
-      if(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos)<this.radius){
-        return true;
-      }
-      else{
-        return false;
-      }
-      console.log(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos), this.radius);
-    }
-    this.clickIn = function(){
-      this.state++;
-      if (this.state>2){
+        // initialize
+        this.xPos = x;
+        this.yPos = y;
+        this.radius = r;
+        this.color = c;
         this.state = 0;
+        this.radMult = 0;
+        this.defaultRad = 15;
+        this.snd;
+        // ... and display
+        this.display = function(){
+          canvasContext.fillStyle = this.color;
+          canvasContext.beginPath();
+          canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI*2, true);
+          canvasContext.fill();
+          canvasContext.closePath();
+          this.snd.play();
+        }
+        this.update = function(){
+          switch(this.state){
+            // case 0 is default
+            case 0:this.radMult = 1;
+            break;
+            //case 1 is shut off
+            case 1: this.radMult = 0.5;
+            break;
+            //case 2 is brighter
+            case 2: this.radMult = 1.5;
+            break;
+          }
+          this.radius = this.defaultRad*this.radMult;
+
+        }
+        this.cursorDist = function(event){
+          let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
+          let a = auraMult*aura+this.radius;
+            if(h<a/8){
+              this.color = "#B9B9B9";
+            }
+            else if(h<a/4){
+              this.color = "#939393";
+            }
+            else if(h<a/2){
+              this.color = "#606060";
+            }
+            else if(h<(a*3)/4){
+              this.color = "#373737";
+            }
+            else {
+              this.color = "#1C1C1C";
+            }
+        }
+        this.checkIfClickIn = function(event){
+          if(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos)<this.radius){
+            return true;
+          }
+          else{
+            return false;
+          }
+          console.log(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos), this.radius);
+        }
+        this.clickIn = function(){
+          this.state++;
+          if (this.state>2){
+            this.state = 0;
+          }
+        }
+      }//https://css-tricks.com/introduction-web-audio-api
+
+  function Sound(source){
+      this.sound = document.createElement("audio");
+      this.sound.src = source;
+      this.sound.setAttribute("preload", "auto");
+      this.sound.setAttribute("controls", "none");
+      this.sound.style.display = "none";
+      document.body.appendChild(this.sound);
+      // source: https://www.w3schools.com/graphics/game_sound.asp
+      this.play = function(){
+          this.sound.play();
       }
     }
   }
-}
-
-
 // end javascript
 </script>
-
 </head>
-
 <body>
-
   <canvas id = "CodyEnvCanvas" width="640" height="640">
   </canvas>
-
 </body>
 </html>
