@@ -32,6 +32,26 @@ canvas.addEventListener("mousemove", function(event){
 }
 });
 
+canvas.addEventListener("click", function(event){
+  let clickedCircle = false;
+  for(let i = 0; i<dotList.length; i++){
+    if(dotList[i].checkIfClickIn(event)){
+      // if a circle is clicked, perform action and exit loop
+      console.log("clicked ", i, );
+      clickedCircle = true;
+      break;
+    }
+  if (!clickedCircle){
+    //if the background was clicked, increase the aura of lit up circles
+      auraMult+=0.5;
+      if(auraMult >=3){
+        auraMult=0.5;
+      }
+  }
+}
+
+});
+
 // create circle array
 let dotList = [];
 const maxSize = 15;
@@ -69,6 +89,7 @@ for(let i = 0; i<8; i++){
     this.yPos = y;
     this.radius = r;
     this.color = c;
+    this.state = 0;
     // ... and display
     this.display = function(){
       canvasContext.fillStyle = this.color;
@@ -77,24 +98,43 @@ for(let i = 0; i<8; i++){
       canvasContext.fill();
       canvasContext.closePath();
     }
+    this.update = function(){
+
+    }
     this.cursorDist = function(event){
       let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
-      if(h<20){
+      let a = auraMult*aura;
+      if(h<a/8){
         this.color = "#B9B9B9";
       }
-      else if(h<40){
+      else if(h<a/4){
         this.color = "#939393";
       }
-      else if(h<60){
+      else if(h<a/2){
         this.color = "#606060";
       }
-      else if(h<80){
+      else if(h<(a*3)/4){
         this.color = "#373737";
       }
       else {
         this.color = "#1C1C1C";
       }
-
+      console.log("AURAS ", aura, auraMult, a);
+    }
+    this.checkIfClickIn = function(event){
+      if(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos)<this.radius){
+        return true;
+      }
+      else{
+        return false;
+      }
+      console.log(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos), this.radius);
+    }
+    this.clickIn = function(){
+      this.state++;
+      if (this.state>=2){
+        this.state = 0;
+      }
 
     }
 
