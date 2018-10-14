@@ -13,13 +13,18 @@
         padding:0;
       }
     </style>
+<script src = "howler.js-master/dist/howler.js"></script>
 <script>
   // begin javascript stuff
   window.onload = function(){
   // code stufffff
-  let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  //let audioContext = new (window.AudioContext || window.webkitAudioContext)();
   let canvas = document.getElementById('CodyEnvCanvas');
   let canvasContext = canvas.getContext('2d');
+
+  let sound = new Howl({
+    src: ["Assets/BirdWing.wav"]
+  });
   // init canvas
   canvas.addEventListener("click", function(event){
     let clickedCircle = false;
@@ -31,7 +36,6 @@
         break;
       }
     }
-    console.log(clickedCircle);
     if (!clickedCircle){
       //if the background was clicked, increase the aura of lit up circles
         auraMult+=0.5;
@@ -44,7 +48,6 @@
     }
   });
   canvas.addEventListener("mousemove", function(event){
-    console.log(event.clientX, event.clientY);
     for(let i = 0; i<dotList.length; i++){
       dotList[i].cursorDist(event);
     }
@@ -60,8 +63,6 @@
   for(let i = 0; i<8; i++){
   for(let j = 0; j<8; j++){
     dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
-    dotList[i].snd = new Sound("SFX/BirdWing.wav");
-    //current i and j values, and x and y values assigned to new dots/circles
   }
 }
   requestAnimationFrame(run);
@@ -85,7 +86,6 @@
         this.state = 0;
         this.radMult = 0;
         this.defaultRad = 15;
-        this.snd;
         // ... and display
         this.display = function(){
           canvasContext.fillStyle = this.color;
@@ -93,7 +93,6 @@
           canvasContext.arc(this.xPos, this.yPos, this.radius, 0, Math.PI*2, true);
           canvasContext.fill();
           canvasContext.closePath();
-          this.snd.play();
         }
         this.update = function(){
           switch(this.state){
@@ -136,7 +135,6 @@
           else{
             return false;
           }
-          console.log(Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos), this.radius);
         }
         this.clickIn = function(){
           this.state++;
@@ -145,19 +143,6 @@
           }
         }
       }//https://css-tricks.com/introduction-web-audio-api
-
-  function Sound(source){
-      this.sound = document.createElement("audio");
-      this.sound.src = source;
-      this.sound.setAttribute("preload", "auto");
-      this.sound.setAttribute("controls", "none");
-      this.sound.style.display = "none";
-      document.body.appendChild(this.sound);
-      // source: https://www.w3schools.com/graphics/game_sound.asp
-      this.play = function(){
-          this.sound.play();
-      }
-    }
   }
 // end javascript
 </script>
