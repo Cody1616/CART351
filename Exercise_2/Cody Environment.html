@@ -77,16 +77,18 @@
     for(let k = 0; k < dotList.length; k++){
       dotList[k].display();
       dotList[k].update();
-      if(dotList[0].color== "#1C1C1C"){
-        dotList[0].sound.mute(true);
-      }
-      else{
-        dotList[0].sound.mute(false);
-      }
+      checkDotSound();
     }
   }
   dotList[0].sound = sound;
   dotList[0].sound.play();
+
+function checkDotSound(){
+  dotList[0].sound.volume(dotList[0].volume*dotList[0].volMult/10);
+
+
+}
+
 // building a circle
   function dot(x, y, r, c){
         // initialize
@@ -95,7 +97,7 @@
         this.radius = r;
         this.color = c;
         this.state = 0;
-        this.radMult = 0;
+        this.radMult = 1;
         this.defaultRad = 15;
         //add sound variable to store howler
         this.sound;
@@ -113,12 +115,15 @@
           switch(this.state){
             // case 0 is default
             case 0:this.radMult = 1;
+            this.volMult = 1;
             break;
-            //case 1 is shut off
+            //case 1 is lower
             case 1: this.radMult = 0.5;
+            this.volMult = 0.5;
             break;
             //case 2 is brighter
             case 2: this.radMult = 1.5;
+            this.volMult = 2;
             break;
           }
           this.radius = this.defaultRad*this.radMult;
@@ -130,18 +135,23 @@
           let a = auraMult*aura+this.radius;
             if(h<a/8){
               this.color = "#B9B9B9";
+              this.volume = 5;
             }
             else if(h<a/4){
               this.color = "#939393";
+              this.volume = 4;
             }
             else if(h<a/2){
               this.color = "#606060";
+              this.volume = 3;
             }
             else if(h<(a*3)/4){
               this.color = "#373737";
+              this.volume = 2;
             }
             else {
               this.color = "#1C1C1C";
+              this.volume = 0;
             }
         }
         this.checkIfClickIn = function(event){
