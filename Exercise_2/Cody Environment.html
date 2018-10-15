@@ -22,11 +22,7 @@
   let canvas = document.getElementById('CodyEnvCanvas');
   let canvasContext = canvas.getContext('2d');
 
-  let sound = new Howl({
-    src: ["Assets/BirdWing.wav"],
-    loop:true,
-    html5:true,
-  });
+
   // init canvas
   canvas.addEventListener("click", function(event){
     let clickedCircle = false;
@@ -58,14 +54,23 @@
   let dotList = [];
   const maxSize = 15;
   const minSize = 10;
-  const b = 80;
+  const b = 100;
   const aura = 200;
   let auraMult = 1;
 //create new dots
-  for(let i = 0; i<8; i++){
-    for(let j = 0; j<8; j++){
-    dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
+  for(let i = 0; i<6; i++){
+    for(let j = 0; j<6; j++){
+    dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#1C1C1C"));
     }
+  }
+  for(let i = 0; i<dotList.length; i++){
+    dotList[i].sound = new Howl({
+      src: ["Assets/sfx"+i+".wav"],
+      loop:true,
+      html5:true,
+    });
+    dotList[i].sound.volume(0.1);
+    dotList[i].sound.play();
   }
 
   requestAnimationFrame(run);
@@ -80,13 +85,12 @@
       checkDotSound();
     }
   }
-  dotList[0].sound = sound;
-  dotList[0].sound.play();
 
 function checkDotSound(){
-  dotList[0].sound.volume(dotList[0].volume*dotList[0].volMult/10);
+  for(let i = 0; i<dotList.length;i++){
+  dotList[i].sound.volume(dotList[i].volume*dotList[i].volMult/10);
 
-
+}
 }
 
 // building a circle
@@ -174,7 +178,7 @@ function checkDotSound(){
 </script>
 </head>
 <body>
-  <canvas id = "CodyEnvCanvas" width="640" height="640">
+  <canvas id = "CodyEnvCanvas" width="600" height="600">
   </canvas>
 </body>
 </html>
