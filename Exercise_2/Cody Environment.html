@@ -23,7 +23,9 @@
   let canvasContext = canvas.getContext('2d');
 
   let sound = new Howl({
-    src: ["Assets/BirdWing.wav"]
+    src: ["Assets/BirdWing.wav"],
+    loop:true,
+    html5:true,
   });
   // init canvas
   canvas.addEventListener("click", function(event){
@@ -61,10 +63,12 @@
   let auraMult = 1;
 //create new dots
   for(let i = 0; i<8; i++){
-  for(let j = 0; j<8; j++){
+    for(let j = 0; j<8; j++){
     dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
+    }
   }
-}
+  dotList[0].sound = sound;
+  dotList[0].sound.play();
   requestAnimationFrame(run);
   //clear canvas and update stuff (later...)
   function run(){
@@ -86,6 +90,10 @@
         this.state = 0;
         this.radMult = 0;
         this.defaultRad = 15;
+        //add sound variable to store howler
+        this.sound;
+        this.volume; // volume - depends on circle size
+        this.volMult; // multiplier - depends on how close the cursor is
         // ... and display
         this.display = function(){
           canvasContext.fillStyle = this.color;
@@ -109,6 +117,10 @@
           this.radius = this.defaultRad*this.radMult;
 
         }
+        this.playSound = function(){
+
+
+        }
         this.cursorDist = function(event){
           let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
           let a = auraMult*aura+this.radius;
@@ -126,6 +138,7 @@
             }
             else {
               this.color = "#1C1C1C";
+              //this.sound.mute(true);
             }
         }
         this.checkIfClickIn = function(event){
