@@ -67,8 +67,7 @@
     dotList.push(new dot((i*b)+40, (j*b)+40, 15, "#FFFFFF"));
     }
   }
-  dotList[0].sound = sound;
-  dotList[0].sound.play();
+
   requestAnimationFrame(run);
   //clear canvas and update stuff (later...)
   function run(){
@@ -78,8 +77,16 @@
     for(let k = 0; k < dotList.length; k++){
       dotList[k].display();
       dotList[k].update();
+      if(dotList[0].color== "#1C1C1C"){
+        dotList[0].sound.mute(true);
+      }
+      else{
+        dotList[0].sound.mute(false);
+      }
     }
   }
+  dotList[0].sound = sound;
+  dotList[0].sound.play();
 // building a circle
   function dot(x, y, r, c){
         // initialize
@@ -117,10 +124,7 @@
           this.radius = this.defaultRad*this.radMult;
 
         }
-        this.playSound = function(){
 
-
-        }
         this.cursorDist = function(event){
           let h = Math.hypot(event.clientX-this.xPos, event.clientY-this.yPos);
           let a = auraMult*aura+this.radius;
@@ -138,7 +142,6 @@
             }
             else {
               this.color = "#1C1C1C";
-              //this.sound.mute(true);
             }
         }
         this.checkIfClickIn = function(event){
