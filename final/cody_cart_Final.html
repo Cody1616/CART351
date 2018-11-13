@@ -1,0 +1,57 @@
+<html>
+<head>
+<title> cody final </title>
+<link href="finalstyle.css", rel = "stylesheet", type=text/css>
+</head>
+
+<body>
+  <script>
+    window.onload = function(){
+
+    let canvas = document.getElementById('NotesCanvas');
+    let canvasContext = canvas.getContext('2d');
+
+  let notes = [];
+  for(let i = 0; i<40; i++){
+      notes.push(new musicNote(Math.random()*600, Math.random()*600, 0));
+      }
+requestAnimationFrame(run);
+function run(){
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+  requestAnimationFrame(run);
+  for(let i = 0; i<notes.length; i++){
+
+      notes[i].display();
+
+  }
+
+}
+
+
+
+
+
+
+
+  function musicNote(x, y, a){
+    // x should be the position on the timeline, y should be
+    // the line/note the square is on
+    this.xPos = x;
+    this.yPos = y;
+    this.Age = a;
+    // for eventual sprites - for now we'll use colors
+    //this.sprite = spritelink;
+    this.display = function(){
+      // color dot for starters
+      canvasContext.fillStyle = "blue";
+      canvasContext.rect(this.xPos, this.yPos, 10, 10);
+      canvasContext.fill()
+    }
+  }
+
+}
+</script>
+<canvas id=NotesCanvas width = 600 height = 600>
+</canvas>
+</body>
+</html>
