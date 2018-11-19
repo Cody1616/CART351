@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<link rel="stylesheet" type="text/css" href="css/catstyle.css">
+<script src="jquery/jquery-3.3.1.min.js"> </script>
+<script>
+  $(document).ready(function(){
+//  let header = $('header');
+//  let section = $('section');
+  let loaded=false;
+
+//when click, do this function
+  $("#getData").click(function(event){
+    //if not loaded, then load
+    if(loaded ===false){
+         console.log("clicked");
+         //get books
+         $.getJSON('catspotting.json',function(data) {
+         //success
+           //step 1: console.log the result
+           console.log(data);
+           //set boolean to true
+           loaded=true;
+           //step 2: display header on html page
+             populateHeader(data);
+             //step 3: display the books ....
+             showCats(data);
+         })
+         //if it fail
+         .fail(function() {
+           console.log( "error" );
+         });
+       }
+   else{
+         console.log("data was loaded");
+
+       }
+   });
+
+   // define everything used above
+
+   function populateHeader(data){
+
+     let sampleHeader = $("<h1>");
+     $(sampleHeader).text(data.Label);
+     $(sampleHeader).appendTo(header);
+
+
+     let samplePara = $("<p>");
+     console.log(data.SubLabel);
+     $(samplePara).text(data.SubLabel);
+     $(samplePara).appendTo(header);
+
+   }
+
+// function to display entries
+   function showCats(data){
+   // make array
+   let cats = data['Days'];
+   $(cats).show();
+
+
+//load all and assign style headers
+
+   } //cats log
+});
+
+
+
+</script>
+
+
+
+  </head>
+
+
+
+  <body>
+    <div class="top">
+<h3>Name</h1>
+<h5>Date</h1>
+<img src="anfisa.jpg"></img>
+</div>
+<div class = "bottom">
+<p>Description<br>Description<br>Description<br>Description</p>
+</div>
+  </body>
+
+</html>

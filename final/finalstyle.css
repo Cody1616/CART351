@@ -9,4 +9,32 @@ background-color: green;
 
 .p{
 
-} 
+}
+
+#noteStyle1 {
+color:#FFA66C;
+}
+#noteStyle2 {
+color:#FFF790;
+}
+#noteStyle3 {
+color:#90D3FF;
+}
+#noteStyle4 {
+color:#FFAEC9;
+}
+#noteStyle5 {
+color:#CBA8FF;
+}
+
+
+#createNote {
+display: none;
+overflow: scroll;
+color: rgba(10, 200, 10, 50);
+position: relative;
+
+
+
+
+}

@@ -1,0 +1,33 @@
+  {
+    "Label":"Cody's Catspotting Log",
+    "Sublabel":"The cats I've met in MTL",
+    "Days":
+      {
+          "Cats Spotted": 2,
+          "Cat1":
+                {
+                  "Image":"url",
+                  "Sex":"Female",
+                  "Appearance":"Grey Tabby",
+                  "Eyes":"Green",
+                  "Name":"???",
+                  "Location":"Sidewalk, Le Plateau",
+                  "Time": "3:45PM",
+                  "Description":"Super talkative, followed me for a block or so"
+
+            },
+            "Cat2":
+                  {
+                    "Image":"url",
+                    "Sex":"Male",
+                    "Appearance":"Black&White",
+                    "Eyes":"Orange",
+                    "Name":"Currie",
+                    "Location":"Hanging out on a windowsill, Hampstead",
+                    "Time": "6:18PM",
+                    "Description":"A friend's cat,
+                    prone to running around, seems unable to meow,
+                    only squeaks"
+              }
+      }
+  }
