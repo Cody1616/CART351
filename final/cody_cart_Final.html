@@ -5,39 +5,71 @@
 </head>
 
 
-
-
-
-
 <body>
   <script>
-    window.onload = function(){
 
+    window.onload = function(){
+      // create a playhead that moves across the canvas and triggers notes it comes across
+  let playHead1 = new playHead(10);
     let canvas = document.getElementById('NotesCanvas');
     let canvasContext = canvas.getContext('2d');
+    // this code is for the button, but it returns an error since playHead1 isnt defined at this point
+      document.getElementById("playButton").addEventListener("click", hitPlay);
 
+      var d = new Date();
+      var startTime = d.getTime();
+      var timePassed;
+      var startPlayNote;
+      var timePassedPlayNote;
+
+// create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
   let notes = [];
   for(let i = 0; i<40; i++){
-      notes.push(new musicNote(Math.random()*600, Math.random()*600, 0));
+      notes.push(new musicNote(Math.random()*canvas.width, Math.random()*canvas.height, 0));
       }
-requestAnimationFrame(run);
-function run(){
-  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-  requestAnimationFrame(run);
-  for(let i = 0; i<notes.length; i++){
 
-      notes[i].display();
 
+
+// actual music notes associated with lines
+  let gamme = ["A", "B", "C", "D", "E", "F", "G"];
+// lines on which the notes will be placed
+  let rows = [];
+  for(let i = 0; i<80; i++){
+    rows.push(new line(canvas.width/80*i, gamme[i%7]))
   }
+
+// animate
+    requestAnimationFrame(run);
+    function run(){
+
+      var e = new Date();
+      timePassed = e.getTime()-startTime;
+
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(run);
+    // update lines, notes, and playhead
+        for(let i = 0; i<notes.length; i++){
+            notes[i].display();
+    }
+
+        for(let i = 0; i<rows.length; i++){
+                rows[i].display();
+                }
+      playHead1.play();
+      playHead1.display();
 
 }
 
-  function musicNote(x, y, a){
+
+
+
+  function musicNote(x, y, a, n){
     // x should be the position on the timeline, y should be
     // the line/note the square is on
     this.xPos = x;
     this.yPos = y;
     this.Age = a;
+    this.note = n;
     // for eventual sprites - for now we'll use colors
     //this.sprite = spritelink;
     this.display = function(){
@@ -48,16 +80,96 @@ function run(){
     }
   }
 
+
+// lines on which the notes are
+  function line(y, n){
+      this.yPos = y;
+      this.note = n;
+      this.display = function(){
+            canvasContext.fillStyle = "black";
+            canvasContext.beginPath();
+            canvasContext.moveTo(0, y);
+            canvasContext.lineTo(canvas.width, y);
+            canvasContext.stroke();
+        }
+  }
+
+  // a function for when the user hits the play button
+  function hitPlay(){
+
+    let f = new Date();
+     startPlayNote = f.getTime();
+      timePassedPlayNote = 0;
+      playHead1.playTime = timePassedPlayNote;  // get initial time to calculate time passed since the button was clicked
+      playHead1.playing = true; // is the music playing?
+
+}
+
+// this is still in progress
+  function column(t, x, c){
+    this.tempo = t;
+    this.xPos = x;
+    this.color = c;
+    this.display = function(){
+          canvasContext.fillStyle = this.color;
+          canvasContext.beginPath();
+          canvasContext.moveTo(x, 0);
+          canvasContext.lineTo(x, canvas.width);
+          canvasContext.stroke();
+      }
+  }
+
+
+
+
+  // for the playhead
+  function playHead(x){
+    // only an x position, since its a vertical line that moves across the canvas
+    this.xPos = x;
+    this.display = function(){
+        canvasContext.fillStyle = "#FF0000";
+        canvasContext.beginPath();
+        canvasContext.moveTo(this.xPos, 0);
+        canvasContext.lineTo(this.xPos, canvas.height);
+        canvasContext.stroke();
+        }
+        // for when the music is playing
+    this.play = function(){
+          if (this.playing){
+            let f = new Date();
+            timePassedPlayNote = f.getTime() - startPlayNote;
+
+            this.xPos = timePassedPlayNote/100;
+            console.log(this.xPos);
+          }
+          // check in=f its hitting notes
+          for(let i = 0; i<notes.length; i++){
+            let a = this.xPos - notes[i].xPos;
+            if(Math.sqrt(a*a+0) <0.5){
+              // play note
+            }
+          }
+        }
+
+        // initialize the variables
+        this.playing = false; // bool - is the music playing
+        this.playTime = 0;
+      }
+
+
 }
 </script>
-<canvas id=NotesCanvas width = 600 height = 600>
-
-
+<canvas id=NotesCanvas width = 1000 height = 500>
 
 </canvas>
-<form>
-  
+<div>
+  <!-- button to play -->
+  <button id="playButton" type="button">Play</button>
+</div>
+<div id = #createNote>
 
+</div>
+<form>
 
 </body>
 </html>
