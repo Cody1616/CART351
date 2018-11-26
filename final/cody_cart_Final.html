@@ -10,11 +10,12 @@
 
     window.onload = function(){
       // create a playhead that moves across the canvas and triggers notes it comes across
-  let playHead1 = new playHead(10);
+      let playHead1 = new playHead(10);
     let canvas = document.getElementById('NotesCanvas');
     let canvasContext = canvas.getContext('2d');
     // this code is for the button, but it returns an error since playHead1 isnt defined at this point
       document.getElementById("playButton").addEventListener("click", hitPlay);
+      document.getElementById("stopButton").addEventListener("click", hitPause);
 
       var d = new Date();
       var startTime = d.getTime();
@@ -104,6 +105,11 @@
       playHead1.playing = true; // is the music playing?
 
 }
+function hitPause(){
+startPlayNote = 0;
+playHead1.playing = false;
+
+}
 
 // this is still in progress
   function column(t, x, c){
@@ -165,6 +171,7 @@
 <div>
   <!-- button to play -->
   <button id="playButton" type="button">Play</button>
+  <button id="stopButton" type="button">Stop</button>
 </div>
 <div id = #createNote>
 
