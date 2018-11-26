@@ -34,6 +34,15 @@ color: rgba(10, 200, 10, 50);
 position: relative;
 }
 
+.form-popup{
+  display:none;
+height: 50%;
+overflow-x: hidden;
+transition: 0.5s;
+
+
+}
+
 canvas{
 padding:10px;
 /* background-color:#000000; */
