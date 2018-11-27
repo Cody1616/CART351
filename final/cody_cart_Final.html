@@ -19,8 +19,6 @@
       document.getElementById("stopButton").addEventListener("click", hitPause);
       document.getElementById("createButton").addEventListener("click", openMenu);
       document.getElementById("cancelButton").addEventListener("click", closeMenu);
-        //create a synth and connect it to the master output (your speakers)
-
 
       var d = new Date();
       var startTime = d.getTime();
@@ -108,22 +106,22 @@
     this.note = this.row.note;
     this.playing = false;
     this.synth = new Tone.Synth().toMaster();
-    this.freq = new Tone.Frequency(this.note);
     console.log("created", this.freq);
     // for eventual sprites - for now we'll use colors
     //this.sprite = spritelink;
     this.display = function(){
       // color dot for starters
-      canvasContext.fillStyle = "blue";
+      canvasContext.fillStyle = "green";
+      canvasContext.strokeStyle = "black";
+      canvasContext.lineWidth = 3;
       canvasContext.rect(this.xPos, this.yPos, 20, 20);
+      canvasContext.stroke();
       canvasContext.fill()
     }
     this.checkPlayHead = function(){
       if (playHead1.xPos > this.xPos && playHead1.xPos < this.xPos+20 &&this.playing == false){
-        console.log(this.freq.toFrequency());
         this.synth.triggerAttackRelease(this.note, "4n");
         this.playing = true;
-        console.log("note played");
       }
 
 
@@ -209,9 +207,25 @@
   <br><br>
   <button id="createButton" type="button">Plant a flower</button>
 </div>
-<div id = "createNote" class = "form-popup">
-<h3>Select color</h3>
-<button id="cancelButton" type="button">Cancel</button>
+  <div id = "createNote" class = "form-popup">
+  <h3>Select color and shape</h3>
+
+
+  <div id=colorPick>
+      <button id="fColor1" type="button" class="circle"> </button>
+      <button id="fColor2" type="button" class="circle"> </button>
+      <button id="fColor3" type="button" class="circle"> </button>
+      <button id="fColor4" type="button" class="circle"> </button>
+      <button id="fColor5" type="button" class="circle"> </button>
+
+  </div>
+  <div id =shapePick>
+    <!-- <button id="fShape1" type="button"><img src:"assets/S1C1.png" </button> -->
+<input type="image" src="assets/S1C1.png">
+
+  </div>
+    <button id="cancelButton" type="button">Cancel</button>
+
 </div>
 <form>
 

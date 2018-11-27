@@ -11,26 +11,41 @@ p{
 
 }
 
-#noteStyle1 {
-color:#FFA66C;
+.circle{
+  height: 50px;
+  width: 50px;
+  border: solid;
+  border-radius: 50%;
+  display: inline-block;
+  border-width: 5px;
+  border-color: #000000;
+  padding: 0;
 }
-#noteStyle2 {
-color:#FFF790;
+.circle:hover{
+  border: solid;
+  border-color: #FFFFFF;
 }
-#noteStyle3 {
-color:#90D3FF;
+
+#fColor1 {
+background-color:#FFA66C;
 }
-#noteStyle4 {
-color:#FFAEC9;
+#fColor2 {
+background-color:#FFF790;
 }
-#noteStyle5 {
-color:#CBA8FF;
+#fColor3 {
+background-color:#90D3FF;
+}
+#fColor4 {
+background-color:#FFAEC9;
+}
+#fColor5 {
+background-color:#CBA8FF;
 }
 
 
 #createNote {
 display: none;
-overflow: scroll;
+overflow: hidden;
 color: rgba(10, 200, 10, 50);
 background-color: #65E880;
 position: relative;
@@ -48,4 +63,18 @@ position: relative;
 canvas{
 padding:10px;
 background-color: #92F3A6;
+}
+
+#colorPick{
+display: block;
+
+}
+
+#shapePick{
+display: block;
+}
+
+#cancelButton{
+display: block;
+
 }
