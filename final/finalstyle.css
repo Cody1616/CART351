@@ -1,5 +1,5 @@
 body {
-  background-color: "#92F3A6";
+  background-color: #92F3A6;
 }
 
 h1{
@@ -32,12 +32,12 @@ color:#CBA8FF;
 display: none;
 overflow: scroll;
 color: rgba(10, 200, 10, 50);
+background-color: #65E880;
 position: relative;
 }
 
 .form-popup{
-  background-color: "#65E880";
-  display:none;
+
   height: 50%;
   overflow-x: hidden;
   transition: 0.5s;
@@ -47,5 +47,5 @@ position: relative;
 
 canvas{
 padding:10px;
-  background-color: "#92F3A6";
+background-color: #92F3A6;
 }
