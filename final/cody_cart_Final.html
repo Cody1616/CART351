@@ -1,17 +1,21 @@
 <html>
 <head>
 <title> cody final </title>
-<link href="finalstyle.css", rel = "stylesheet", type="text/css">
+<link href="css/finalstyle.css", rel = "stylesheet", type="text/css">
 <script src="script/Tone.js"></script>
+<script src="jquery/jquery-3.3.1.min.js"></script>
+
 </head>
 
-
 <body>
+
   <script>
 
     window.onload = function(){
+
       // create a playhead that moves across the canvas and triggers notes it comes across
       let playHead1 = new playHead(10);
+      let placePreview = new previewIcon();
       let canvas = document.getElementById('NotesCanvas');
       let canvasContext = canvas.getContext('2d');
     // this code is for the button, but it returns an error since playHead1 isnt defined at this point
@@ -19,13 +23,17 @@
       document.getElementById("stopButton").addEventListener("click", hitPause);
       document.getElementById("createButton").addEventListener("click", openMenu);
       document.getElementById("cancelButton").addEventListener("click", closeMenu);
+      document.getElementById("pckSpotBtn").addEventListener("click", previewIcon);
+      //document.getElementById("NotesCanvas").addEventListener("mouseMove", placePreview.update);
+      // bool for pickRow stage
+      var preview = false;
 
       var d = new Date();
       var startTime = d.getTime();
       var timePassed;
       var startPlayNote;
       var timePassedPlayNote;
-      // actual music notes associated with lines
+      // actual music notes associated with lines (in Hz since Tone does not recognize letter notes)
       let gamme = [220, 247, 262, 294, 330, 349, 392, 440, 493, 523, 554, 587, 659, 698, 784];
 
       // lines on which the notes will be placed
@@ -47,7 +55,7 @@
       notes.push(new musicNote(Math.random()*(canvas.width - 20)+10, rows[v], 0));
       }
 
-// animate
+// animate_______________animate__________________animate_____________________animate
     requestAnimationFrame(run);
     function run(){
 
@@ -69,6 +77,9 @@
             }
       playHead1.play();
       playHead1.display();
+      if(preview){
+          placePreview.display();
+      }
 
 }
 
@@ -119,11 +130,17 @@
       canvasContext.fill()
     }
     this.checkPlayHead = function(){
-      if (playHead1.xPos > this.xPos && playHead1.xPos < this.xPos+20 &&this.playing == false){
-        this.synth.triggerAttackRelease(this.note, "4n");
-        this.playing = true;
-      }
 
+        if (playHead1.xPos > this.xPos && playHead1.xPos < this.xPos+20){
+          if(this.playing == false){
+            this.synth.triggerAttackRelease(this.note, "4n");
+            this.playing = true;
+          }
+        }
+          else {
+
+          this.playing = false;
+        }
 
     }
   }
@@ -178,7 +195,7 @@
             let f = new Date();
             timePassedPlayNote = f.getTime() - startPlayNote;
 
-            this.xPos = timePassedPlayNote/100;
+            this.xPos = timePassedPlayNote/50;
           }
         }
         // initialize the variables
@@ -187,23 +204,151 @@
   }
       function openMenu(){
         document.getElementById("createNote").style.display = "block";
+        preview = true;
 
       }
 
       function closeMenu(){
         document.getElementById("createNote").style.display = "none";
+        preview = false;
       }
+
+      function getIcons(){
+        //pick the correct icon
+        switch(color){
+              case 1: switch(shape){
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+              }
+              break;
+              case 2:switch(shape){
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+              }
+              break;
+              case 3:switch(shape){
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+              }
+              break;
+              case 4:switch(shape){
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+              }
+              break;
+              case 5:switch(shape){
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+              }
+              break;
+          }
+      }
+
+
+      function previewIcon(){
+        this.xPos = 0;
+        this.yPos = 0;
+        this.move = false;
+        this.display = function(){
+          canvasContext.fillStyle = "#00FF00";
+          canvasContext.strokeStyle = "#99000000";
+          canvasContext.lineWidth = 3;
+          canvasContext.rect(this.xPos, this.yPos, 20, 20);
+          canvasContext.stroke();
+          canvasContext.fill()
+        }
+        this.update = function(event){
+          if(this.move){
+          this.xPos = event.pageX;
+          this.yPos = event.pageY;
+        }
+      }
+    }
+
+
+//__________________________________A___J___A___X______________________________//
+
+        $("#FlowerPick").submit(function(event) {
+       //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
+      event.preventDefault();
+     console.log("button clicked");
+     let form = $('#FlowerPick')[0];
+     let data = new FormData(form);
+     $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "script/addToDB.php",
+            data: data,
+            processData: false,//prevents from converting into a query string
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (response) {
+            //reponse is a STRING (not a JavaScript object -> so we need to convert)
+            console.log(response);
+          //use the JSON .parse function to convert the JSON string into a Javascript object
+        //  let parsedJSON = JSON.parse(response);
+        //  console.log(parsedJSON);
+        //  displayResponse(parsedJSON);
+           },
+           error:function(){
+          console.log("error occurred");
+        }
+      });
+    });
 
 
 }
 </script>
-<canvas id="NotesCanvas" width = 1000 height = 500>
+<canvas id="NotesCanvas" width = 1500 height = 500>
+
 
 </canvas>
 <div>
   <!-- button to play -->
   <button id="playButton" type="button">Play</button>
   <button id="stopButton" type="button">Stop</button>
+
   <br><br>
   <button id="createButton" type="button">Plant a flower</button>
 </div>
@@ -212,22 +357,30 @@
 
 
   <div id=colorPick>
-      <button id="fColor1" type="button" class="circle"> </button>
-      <button id="fColor2" type="button" class="circle"> </button>
-      <button id="fColor3" type="button" class="circle"> </button>
-      <button id="fColor4" type="button" class="circle"> </button>
-      <button id="fColor5" type="button" class="circle"> </button>
+    <form id = "FlowerPick">
+      <input type="radio" name="color" value="1"> <span id = fColor1 class = circle></span>
+      <input type="radio" name="color" value="2"> <span id = fColor2 class = circle></span>
+      <input type="radio" name="color" value="3"> <span id = fColor3 class = circle></span>
+      <input type="radio" name="color" value="4"> <span id = fColor4 class = circle></span>
+      <input type="radio" name="color" value="5"> <span id = fColor5 class = circle></span>
+      <br><br><br>
+      <input type="radio" name="shape" value="1"> <img src="assets/S1C1.png" width = 50 height = 50>
+      <input type="radio" name="shape" value="2"> <img src="assets/S1C1.png" width = 50 height = 50>
+      <input type="radio" name="shape" value="3"> <img src="assets/S1C1.png" width = 50 height = 50>
+      <input type="radio" name="shape" value="4"> <img src="assets/S1C1.png" width = 50 height = 50>
+      <input type="radio" name="shape" value="5"> <img src="assets/S1C1.png" width = 50 height = 50>
 
-  </div>
-  <div id =shapePick>
-    <!-- <button id="fShape1" type="button"><img src:"assets/S1C1.png" </button> -->
-<input type="image" src="assets/S1C1.png">
-
-  </div>
+<br>
+   Name:
+    <input type="text" name="uName"><br>
+<h5> Use the Preview Icon to pick a spot for your flower!</h5>
+    <button id="pckSpotBtn" type = "submit">Pick a spot!</button>
+    <br>
     <button id="cancelButton" type="button">Cancel</button>
 
+
 </div>
-<form>
+</form>
 
 </body>
 </html>
