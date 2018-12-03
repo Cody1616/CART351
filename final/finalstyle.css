@@ -1,16 +1,10 @@
 body {
   background-color: #92F3A6;
 }
-
 h1{
-
-
 }
-
 p{
-
 }
-
 .circle{
   height: 50px;
   width: 50px;
@@ -25,56 +19,43 @@ p{
   border: solid;
   border-color: #FFFFFF;
 }
-
 #fColor1 {
-background-color:#FFA66C;
+  background-color:#FFA66C;
 }
 #fColor2 {
-background-color:#FFF790;
+  background-color:#FFF790;
 }
 #fColor3 {
-background-color:#90D3FF;
+  background-color:#90D3FF;
 }
 #fColor4 {
-background-color:#FFAEC9;
+  background-color:#FFAEC9;
 }
 #fColor5 {
-background-color:#CBA8FF;
+  background-color:#CBA8FF;
 }
-
-
 #createNote {
-display: none;
-overflow: hidden;
-color: rgba(10, 200, 10, 50);
-background-color: #65E880;
-position: relative;
+  display: none;
+  overflow: hidden;
+  color: rgba(10, 200, 10, 50);
+  background-color: #65E880;
+  position: relative;
 }
-
 .form-popup{
-
   height: 50%;
   overflow-x: hidden;
   transition: 0.5s;
-
-
 }
-
 canvas{
-padding:10px;
-background-color: #92F3A6;
+  padding:10px;
+  background-color: #92F3A6;
 }
-
-#colorPick{
-display: block;
-
+#flowerPick{
+  display: block;
 }
-
 #shapePick{
-display: block;
+  display: block;
 }
-
 #cancelButton{
-display: block;
-
+  display: block;
 }
