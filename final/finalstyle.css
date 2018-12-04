@@ -36,14 +36,14 @@ p{
 }
 #createNote {
   display: none;
-  overflow: hidden;
+  /* overflow: hidden; */
   color: rgba(10, 200, 10, 50);
   background-color: #65E880;
   position: relative;
 }
 .form-popup{
   height: 50%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   transition: 0.5s;
 }
 canvas{

@@ -12,6 +12,9 @@
         // create a playhead that moves across the canvas and triggers notes it comes across
         let playHead1 = new playHead(10);
         let placePreview = new previewIcon();
+        function drag(event){
+          placePreview.drag(event);
+        }
         let canvas = document.getElementById('NotesCanvas');
         let canvasContext = canvas.getContext('2d');
         // this code is for the button, but it returns an error since playHead1 isnt defined at this point
@@ -20,37 +23,47 @@
         document.getElementById("createButton").addEventListener("click", openMenu);
         document.getElementById("cancelButton").addEventListener("click", closeMenu);
         document.getElementById("pckSpotBtn").addEventListener("click", previewIcon);
-        //document.getElementById("NotesCanvas").addEventListener("mouseMove", placePreview.update);
+        document.getElementById("NotesCanvas").addEventListener("click", drag);
         // bool for pickRow stage
         var preview = false;
-
         var d = new Date();
         var startTime = d.getTime();
         var timePassed;
         var startPlayNote;
         var timePassedPlayNote;
         // actual music notes associated with lines (in Hz since Tone does not recognize letter notes)
-        let gamme = [220, 247, 262, 294, 330, 349, 392, 440, 493, 523, 554, 587, 659, 698, 784];
+        let gamme = [1975, 1760, 1568, 1397, 1318, 1174, 1046,
+                    987, 880, 784, 698, 659, 587, 554,
+                    523, 493, 440, 392, 349, 330, 294,
+                    262, 247, 220, 196, 174, 165, 147];
+
         // lines on which the notes will be placed
         let rows = [];
-        for(let i = 0; i<42; i++){
+        for(let i = 0; i<28; i++){
           // alternate between visible and invisible lines
           // for notes that are on lines and between lines
+          let x = 10*i+20;
           if(i%2 == 0){
-            rows.push(new line(10*i+20, gamme[i%14], false));
+            rows.push(new line(x, gamme[i%gamme.length], false));
           }
           else{
-            rows.push(new line(10*i+20, gamme[i%14], true));
+            rows.push(new line(x, gamme[i%gamme.length], true));
           }
         }
         // create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
         let notes = [];
-        for(let i = 0; i<100; i++){
+        for(let i = 0; i<10; i++){
           // display all notes. Currently at random for testing purposes.
           let v = Math.random()*rows.length;
           v -=v%1;
-          notes.push(new musicNote(Math.random()*(canvas.width - 20)+10, rows[v], 0));
+          notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
         }
+        //bars
+        let bars = [];
+        for(let i = 0; i<5; i++){
+          bars.push(new bar(i*canvas.width/4, "black"));
+        }
+
         // animate_______________animate__________________animate_____________________animate
         requestAnimationFrame(run);
         function run(){
@@ -63,6 +76,9 @@
           // update lines, notes, and playhead
           for(let i = 0; i<rows.length; i++){
             rows[i].display();
+          }
+          for(let i = 0; i<bars.length; i++){
+            bars[i].display();
           }
           for(let i = 0; i<notes.length; i++){
             notes[i].display();
@@ -219,17 +235,17 @@
           playHead1.playing = false;
         }
         // this is still in progress
-        function column(t, x, c){
+        function bar(x, c){
           // for bars
-          this.tempo = t;
+          //this.tempo = t; // how long they are
           this.xPos = x;
           this.color = c;
           this.display = function(){
             canvasContext.fillStyle = this.color;
             canvasContext.lineWidth = 2;
             canvasContext.beginPath();
-            canvasContext.moveTo(x, 0);
-            canvasContext.lineTo(x, canvas.width);
+            canvasContext.moveTo(x, 30);
+            canvasContext.lineTo(x, canvas.height);
             canvasContext.stroke();
           }
         }
@@ -272,24 +288,34 @@
         }
         function previewIcon(){
           this.xPos = 0;
-          this.yPos = 0;
-          this.move = false;
+          // row position in the array
+          this.r = 0;
+          this.synth = new Tone.Synth().toMaster();
           this.display = function(){
             canvasContext.fillStyle = "#00FF00";
             canvasContext.strokeStyle = "#99000000";
             canvasContext.lineWidth = 3;
-            canvasContext.rect(this.xPos, this.yPos, 20, 20);
+            canvasContext.rect(this.xPos, rows[this.r].yPos, 20, 20);
             canvasContext.stroke();
             canvasContext.fill()
           }
-          this.update = function(event){
-            if(this.move){
+
+          // click and drag
+          this.drag = function(event){
+            if(preview == true){
               this.xPos = event.pageX;
-              this.yPos = event.pageY;
+              this.y = event.pageY;
+              // snap to closest row
+              let x = 0;
+              for(let i = 0; i<rows.length; i++){
+                if(Math.abs(rows[i].yPos-this.y) < Math.abs(rows[x].yPos-this.y)){
+                  x = i;
+                }
+              }
+              this.r = x;
+              this.synth.triggerAttackRelease(rows[x].note, "4n");
             }
           }
-          // click and drag
-          this.drag = function(){}
           // on release - snap to nearest line
         }
         //__________________________________A___J___A___X______________________________//
@@ -323,7 +349,7 @@
         });
       }
     </script>
-    <canvas id="NotesCanvas" width = 1500 height = 500>
+    <canvas id="NotesCanvas" width = 1500 height = 310>
     </canvas>
     <div>
       <!-- button to play -->
