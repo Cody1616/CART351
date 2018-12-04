@@ -25,7 +25,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
  $color = $_POST['color'];
  $shape = $_POST['shape'];
  $user= $_POST['uName'];
- $query = "INSERT INTO flowers (color, shape, user) VALUES ('$color', '$shape', '$uName')";
+ $row = $_POST['row'];
+ $xPos = $_POST['xPos'];
+ $query = "INSERT INTO flowers (color, shape, user, row, xPos) VALUES ('$color', '$shape', '$user', '$row', '$xPos')";
  $ok1 = $db->exec($query);
 if (!$ok1)
 {

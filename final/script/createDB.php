@@ -21,7 +21,7 @@ try
    echo ("Opened or created graffiti gallery data base successfully<br \>");
 
    //sql statement
-   $theQuery = 'CREATE TABLE flowers (flowerID INTEGER PRIMARY KEY NOT NULL, color INTEGER, shape INTEGER, rowPos INTEGER, yPos INTEGER, creationDate TEXT, user TEXT)';
+   $theQuery = 'CREATE TABLE flowers (flowerID INTEGER PRIMARY KEY NOT NULL, color INTEGER, shape INTEGER, row INTEGER, xPos INTEGER, creationDate TEXT, user TEXT)';
 
 // exec - execute (manipulate db directly)
 // returns bool - true if successfull, false otherwise

@@ -9,6 +9,28 @@
   <body>
     <script>
         window.onload = function(){
+          let results;
+         $.ajax({
+                type: "POST",
+                enctype: 'text/plain',
+                url: "script/retrieveData.php",
+                data: "",
+                processData: false,//prevents from converting into a query string
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (response) {
+                console.log(response);
+                //use the JSON .parse function to convert the JSON string into a Javascript object
+                let parsedJSON = JSON.parse(response);
+                console.log(parsedJSON);
+                results = parsedJSON;
+               },
+               error:function(){
+              console.log("error occurred");
+            }
+          });
+
         // create a playhead that moves across the canvas and triggers notes it comes across
         let playHead1 = new playHead(10);
         let placePreview = new previewIcon();
@@ -36,7 +58,6 @@
                     987, 880, 784, 698, 659, 587, 554,
                     523, 493, 440, 392, 349, 330, 294,
                     262, 247, 220, 196, 174, 165, 147];
-
         // lines on which the notes will be placed
         let rows = [];
         for(let i = 0; i<28; i++){
@@ -52,18 +73,20 @@
         }
         // create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
         let notes = [];
-        for(let i = 0; i<10; i++){
-          // display all notes. Currently at random for testing purposes.
-          let v = Math.random()*rows.length;
-          v -=v%1;
-          notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
+        // for(let i = 0; i<10; i++){
+        //   // display all notes. Currently at random for testing purposes.
+        //   let v = Math.random()*rows.length;
+        //   v -=v%1;
+        //   notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
+        // }
+        for(let i = 0; i<3; i++){
+          notes.push(results[i].xPos, results[i].row, 5);
         }
         //bars
         let bars = [];
         for(let i = 0; i<5; i++){
           bars.push(new bar(i*canvas.width/4, "black"));
         }
-
         // animate_______________animate__________________animate_____________________animate
         requestAnimationFrame(run);
         function run(){
@@ -146,7 +169,6 @@
               // if the playhead has moved on, then the sound should not be playing.
               this.playing = false;
             }
-
           }
           function getIcons(){
             //pick the correct icon
@@ -293,13 +315,11 @@
           this.synth = new Tone.Synth().toMaster();
           this.display = function(){
             canvasContext.fillStyle = "#00FF00";
-            canvasContext.strokeStyle = "#99000000";
-            canvasContext.lineWidth = 3;
             canvasContext.rect(this.xPos, rows[this.r].yPos, 20, 20);
+            console.log(this.r);
             canvasContext.stroke();
             canvasContext.fill()
           }
-
           // click and drag
           this.drag = function(event){
             if(preview == true){
@@ -322,9 +342,12 @@
         $("#FlowerPick").submit(function(event) {
           //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
           event.preventDefault();
+          //console.log(placePreview.r);
           console.log("button clicked");
           let form = $('#FlowerPick')[0];
           let data = new FormData(form);
+          data.append("row",placePreview.r);
+          data.append("xPos",placePreview.xPos);
           $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
