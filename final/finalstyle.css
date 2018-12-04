@@ -15,29 +15,30 @@ p{
   border-color: #000000;
   padding: 0;
 }
-.circle:hover{
-  border: solid;
-  border-color: #FFFFFF;
-}
 .image{
   width:20px;
   height:20px;
   background: url("assets/S1C1.png");
 }
 #fColor1 {
-  background-color:#FFA66C;
+  background-color:#99FFFF;
+  border-color: #339999;
 }
 #fColor2 {
-  background-color:#FFF790;
+  background-color:#FFFF99;
+  border-color:#999933;
 }
 #fColor3 {
-  background-color:#90D3FF;
+  background-color:#FF9999;
+  border-color:#993333;
 }
 #fColor4 {
-  background-color:#FFAEC9;
+  background-color:#FF99FF;
+  border-color:#993399;
 }
 #fColor5 {
-  background-color:#CBA8FF;
+  background-color:#9999FF;
+  border-color:#333399;
 }
 #createNote {
   display: none;
