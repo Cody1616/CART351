@@ -19,6 +19,11 @@ p{
   border: solid;
   border-color: #FFFFFF;
 }
+.image{
+  width:20px;
+  height:20px;
+  background: url("assets/S1C1.png");
+}
 #fColor1 {
   background-color:#FFA66C;
 }

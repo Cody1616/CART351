@@ -73,15 +73,15 @@
         }
         // create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
         let notes = [];
-        // for(let i = 0; i<10; i++){
-        //   // display all notes. Currently at random for testing purposes.
-        //   let v = Math.random()*rows.length;
-        //   v -=v%1;
-        //   notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
-        // }
-        for(let i = 0; i<3; i++){
-          notes.push(results[i].xPos, results[i].row, 5);
+        for(let i = 0; i<10; i++){
+          // display all notes. Currently at random for testing purposes.
+          let v = Math.random()*rows.length;
+          v -=v%1;
+          notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
         }
+        // for(let i = 0; i<3; i++){
+        //   notes.push(results[i].xPos, results[i].row, 5);
+        // }
         //bars
         let bars = [];
         for(let i = 0; i<5; i++){
