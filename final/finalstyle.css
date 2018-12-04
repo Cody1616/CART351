@@ -8,17 +8,16 @@ p{
 .circle{
   height: 50px;
   width: 50px;
+  border-width: 1px;
   border: solid;
   border-radius: 50%;
   display: inline-block;
-  border-width: 5px;
-  border-color: #000000;
   padding: 0;
 }
-.image{
+#S1C1{
   width:20px;
   height:20px;
-  background: url("assets/S1C1.png");
+  display:none;
 }
 #fColor1 {
   background-color:#99FFFF;

@@ -39,14 +39,14 @@
         }
         let canvas = document.getElementById('NotesCanvas');
         let canvasContext = canvas.getContext('2d');
-        // this code is for the button, but it returns an error since playHead1 isnt defined at this point
         document.getElementById("playButton").addEventListener("click", hitPlay);
         document.getElementById("stopButton").addEventListener("click", hitPause);
         document.getElementById("createButton").addEventListener("click", openMenu);
         document.getElementById("cancelButton").addEventListener("click", closeMenu);
-        document.getElementById("pckSpotBtn").addEventListener("click", previewIcon);
+        document.getElementById("createButton").addEventListener("click", previewIcon);
         document.getElementById("NotesCanvas").addEventListener("click", drag);
-        // bool for pickRow stage
+        document.getElementById("pckSpotBtn").addEventListener("click", closeMenu);
+        // bool for position picking stage
         var preview = false;
         var d = new Date();
         var startTime = d.getTime();
@@ -58,6 +58,8 @@
                     987, 880, 784, 698, 659, 587, 554,
                     523, 493, 440, 392, 349, 330, 294,
                     262, 247, 220, 196, 174, 165, 147];
+        let icons = [];
+
         // lines on which the notes will be placed
         let rows = [];
         for(let i = 0; i<28; i++){
@@ -150,12 +152,13 @@
           // for eventual sprites - for now we'll use colors
           this.display = function(){
             // color dot for starters
-            canvasContext.fillStyle = "green";
-            canvasContext.strokeStyle = "black";
-            canvasContext.lineWidth = 3;
-            canvasContext.rect(this.xPos, this.yPos, 20, 20);
-            canvasContext.stroke();
-            canvasContext.fill()
+            // canvasContext.fillStyle = "green";
+            // canvasContext.strokeStyle = "black";
+            // canvasContext.lineWidth = 3;
+            // canvasContext.rect(this.xPos, this.yPos, 20, 20);
+            // canvasContext.stroke();
+            // canvasContext.fill()
+            //canvasContext.drawImage("assets/icons/flower06.png", 20, 20);
           }
           this.checkPlayHead = function(){
             // checks if playhead is on note. if so, play tone
@@ -391,11 +394,11 @@
           <input type="radio" name="color" value="4"> <span id = fColor4 class = circle></span>
           <input type="radio" name="color" value="5"> <span id = fColor5 class = circle></span>
           <br><br><br>
-          <input type="radio" name="shape" value="1"> <img src="assets/S1C1.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="2"> <img src="assets/S1C1.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="3"> <img src="assets/S1C1.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="4"> <img src="assets/S1C1.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="5"> <img src="assets/S1C1.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="1"> <img src="assets/icons/flower01.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="2"> <img src="assets/icons/flower02.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="3"> <img src="assets/icons/flower03.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="4"> <img src="assets/icons/flower04.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="5"> <img src="assets/icons/flower05.png" width = 50 height = 50>
 
           <br>
           Name:
