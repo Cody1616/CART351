@@ -25,14 +25,12 @@
                 let parsedJSON = JSON.parse(response);
                 console.log(parsedJSON);
                 data = parsedJSON;
-                flowerseGo();
                },
                 error:function(){
                   console.log("error occurred");
                 }
               });
         // create a playhead that moves across the canvas and triggers notes it comes across
-        function flowerseGo(){
         let playHead1 = new playHead(10);
         let placePreview = new previewIcon();
         function drag(event){
@@ -82,11 +80,10 @@
         //   v -=v%1;
         //   notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
         // }
-        console.log("here:: "+data);
+        console.log(data);
         //notes.push(new musicNote(data.xPos, data.row, 0));
         for(let i = 0; i<data.length; i++){
             notes.push(new musicNote(data[i].xPos, data[i].row, 0));
-            console.log(i);
           }
 
 
@@ -153,7 +150,7 @@
           this.Age = a;
           console.log(this.row);
           this.yPos = rows[this.row].yPos;
-          this.note = rows[this.row].note;
+          this.note = this.row.note;
           this.playing = false; // if playing, then don't start the trigger attack again
           this.synth = new Tone.Synth().toMaster();
           // for eventual sprites - for now we'll use colors
@@ -380,7 +377,6 @@
             }
           });
         });
-      }
 
     }
     </script>
