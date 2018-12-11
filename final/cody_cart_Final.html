@@ -2,6 +2,7 @@
   <head>
     <title> cody final </title>
     <link href="css/finalstyle.css", rel = "stylesheet", type="text/css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
     <script src="script/Tone.js"></script>
     <script src="jquery/jquery-3.3.1.min.js"></script>
   </head>
@@ -35,18 +36,43 @@
       function flowerseGo(){
         let playHead1 = new playHead(0);
         let placePreview = new previewIcon();
-        function drag(event){
-          placePreview.drag(event);
+
+        function stopDragPrev(event){
+          placePreview.stopDrag(event)
         }
+        function dragPrev(event){
+          placePreview.dragP(event);
+        }
+
         let canvas = document.getElementById('NotesCanvas');
         let canvasContext = canvas.getContext('2d');
-        document.getElementById("playButton").addEventListener("click", hitPlay);
-        document.getElementById("stopButton").addEventListener("click", hitPause);
-        document.getElementById("createButton").addEventListener("click", openMenu);
-        document.getElementById("cancelButton").addEventListener("click", closeMenu);
-        document.getElementById("createButton").addEventListener("click", previewIcon);
-        document.getElementById("NotesCanvas").addEventListener("click", drag);
-        document.getElementById("pckSpotBtn").addEventListener("click", closeMenu);
+          document.getElementById("playButton").addEventListener("click", hitPlay);
+          document.getElementById("stopButton").addEventListener("click", hitPause);
+          document.getElementById("createButton").addEventListener("click", openMenu);
+          document.getElementById("cancelButton").addEventListener("click", closeMenu);
+          document.getElementById("createButton").addEventListener("click", previewIcon);
+          document.getElementById("pckSpotBtn").addEventListener("click", closeMenu);
+          canvas.addEventListener("mousedown", function(){
+
+            if(preview && event.clientX > placePreview.xPos && event.clientX<placePreview.xPos +30){
+                placePreview.drag = true;
+                console.log("YEE");
+              }
+
+            else if(event.pageX > playHead1.xPos && event.pageX > playHead1.xPos+2){
+              playHead1.dragged = true;
+            }
+          });
+          // canvas.addEventListener('mousedown', checkMouse);
+          canvas.addEventListener("mouseout", function(){
+            placePreview.drag = false;
+            playHead1.dragged = false;
+          });
+          canvas.addEventListener('mousemove', dragPH);
+          canvas.addEventListener('mouseup', stopDrag);
+          // canvas.addEventListener("mousedown", startDragPrev);
+          canvas.addEventListener("mousemove", dragPrev);
+          canvas.addEventListener("mouseup", stopDragPrev);
         // bool for position picking stage
         var preview = false;
         var d = new Date();
@@ -74,26 +100,28 @@
         }
         // create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
         let notes = [];
-        // for(let i = 0; i<10; i++){
-        //   // display all notes. Currently at random for testing purposes.
-        //   let v = Math.random()*rows.length;
-        //   v -=v%1;
-        //   notes.push(new musicNote(Math.random()*(canvas.width/3 - 20)+10, rows[v], 0));
-        // }
         console.log("here:: "+data);
-        //notes.push(new musicNote(data.xPos, data.row, 0));
         for(let i = 0; i<data.length; i++){
-            notes.push(new musicNote(data[i].xPos, data[i].row, 0));
+            notes.push(new musicNote(data[i].xPos, data[i].row, data[i].creationTime));
+            let fTitle = "Created by " + data[i].user + " on " + data[i].creationDate + ".";
             notes[i].pic = document.createElement("IMG");
+
             let iconSource = getIcons(data[i].color, data[i].shape);
             notes[i].pic.setAttribute("src", iconSource);
+
             notes[i].pic.setAttribute("width", "20px");
             notes[i].pic.setAttribute("height", "20px");
             notes[i].stringID = "flower"+i;
             notes[i].pic.setAttribute("ID", notes[i].stringID);
+            notes[i].pic.setAttribute("title", fTitle);
             document.getElementById('NotesCanvas').appendChild(notes[i].pic);
             //console.log(i);
           }
+
+        let dead = document.createElement("IMG");
+        dead.setAttribute("ID", "deadFlower")
+        dead.setAttribute("src", "assets/icons/flowerdead.png");
+        document.getElementById('NotesCanvas').appendChild(dead);
         //bars
         let bars = [];
         for(let i = 0; i<5; i++){
@@ -152,33 +180,33 @@
           // the line/note the square is on
           this.pic;
           this.xPos = x;
-          // this.yPos = y;
-          // this.note = n;
           this.row = r;
           this.Age = a;
           console.log(this.row);
           this.yPos = rows[this.row].yPos;
           this.note = rows[this.row].note;
-          this.stringID;
+          this.stringID; //ID of image element
+          this.alive = true;
           this.playing = false; // if playing, then don't start the trigger attack again
           this.synth = new Tone.Synth().toMaster();
           // for eventual sprites - for now we'll use colors
           this.display = function(){
-            //color dot for starters
-            // canvasContext.fillStyle = "green";
-            // canvasContext.strokeStyle = "black";
-            // canvasContext.lineWidth = 3;
-            // canvasContext.rect(this.xPos, this.yPos, 20, 20);
-            // canvasContext.stroke();
-            // canvasContext.fill()
+                this.checkAge();
+                var canvas = document.getElementById("NotesCanvas");
+                var ctx = canvas.getContext("2d");
+                var icon = document.getElementById(this.stringID);
+                ctx.drawImage(icon, this.xPos, this.yPos, 30, 30);
+              }
 
-            var canvas = document.getElementById("NotesCanvas");
-            var ctx = canvas.getContext("2d");
-            var icon = document.getElementById(this.stringID);
-            ctx.drawImage(icon, this.xPos, this.yPos, 30, 30);
-            //canvasContext.drawImage("assets/icons/flower06.png", 20, 20);
-          }
+            this.checkAge = function(){
+              if(startTime+timePassed - this.Age > 0){
+                  this.stringID = "deadFlower";
+                  console.log(this.stringID);
+                  this.alive = false;
+                }
+              }
           this.checkPlayHead = function(){
+            if(this.alive){
             // checks if playhead is on note. if so, play tone
             if (playHead1.xPos > this.xPos && playHead1.xPos < this.xPos+20){
               if(this.playing == false){
@@ -189,9 +217,11 @@
             else {
               // if the playhead has moved on, then the sound should not be playing.
               this.playing = false;
+                }
+              }
             }
           }
-        }
+
         // a function for when the user hits the play button
         function hitPlay(){
           // create a new time to calculate the time passed since hitPlay
@@ -207,7 +237,7 @@
           // if pause is hit, then stop playing.
           playHead1.playing = false;
         }
-        // this is still in progress
+        // this is still in progres
         function bar(x, c){
           // for bars
           //this.tempo = t; // how long they are
@@ -226,6 +256,7 @@
         function playHead(x){
           // only an x position, since its a vertical line that moves across the canvas
           this.xPos = x;
+          this.dragged = false;
           this.display = function(){
             canvasContext.strokeStyle = "#000000"
             canvasContext.fillStyle = "#000000";
@@ -251,6 +282,16 @@
           this.playing = false; // bool - is the music playing
           this.playTime = 0;
         }
+        function dragPH(event){
+          if(playHead1.dragged&&!placePreview.drag){
+            playHead1.xPos = event.pageX-10;
+          }
+        }
+        function stopDrag(event){
+          if(playHead1.dragged){
+            playHead1.dragged = false;
+          }
+        }
         //open the flower customization menu
         function openMenu(){
           document.getElementById("createNote").style.display = "block";
@@ -267,16 +308,17 @@
           // row position in the array
           this.r = 0;
           this.synth = new Tone.Synth().toMaster();
+          this.drag = false;
           this.display = function(){
             canvasContext.fillStyle = "#00FF00";
-            canvasContext.rect(this.xPos, rows[this.r].yPos, 20, 20);
+            canvasContext.rect(this.xPos, rows[this.r].yPos, 30, 30);
             console.log(this.r);
             canvasContext.stroke();
             canvasContext.fill()
           }
-          // click and drag
-          this.drag = function(event){
-            if(preview == true){
+
+          this.dragP = function(event){
+            if(preview && this.drag && !playHead1.dragged){
               this.xPos = event.pageX;
               this.y = event.pageY;
               // snap to closest row
@@ -287,10 +329,16 @@
                 }
               }
               this.r = x;
-              this.synth.triggerAttackRelease(rows[x].note, "4n");
+
             }
           }
           // on release - snap to nearest line
+          this.stopDrag = function(event){
+              if(this.drag){
+              this.synth.triggerAttackRelease(rows[this.r].note, "4n");
+              this.drag = false;
+            }
+          }
         }
         //pick icons
         function getIcons(color, shape){
@@ -375,6 +423,9 @@
           let data = new FormData(form);
           data.append("row",placePreview.r);
           data.append("xPos",placePreview.xPos);
+          nowD = new Date();
+          data.append("creationDate", nowD.toString());
+          data.append("creationTime", startTime+timePassed);
           $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
@@ -398,7 +449,6 @@
           });
         });
       }
-
     }
     </script>
     <canvas id="NotesCanvas" width = 1500 height = 465>
