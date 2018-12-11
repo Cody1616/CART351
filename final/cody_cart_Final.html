@@ -66,7 +66,7 @@
         for(let i = 0; i<28; i++){
           // alternate between visible and invisible lines
           // for notes that are on lines and between lines
-          let x = 10*i+20;
+          let x = 15*i+20;
           if(i%2 == 0){
             rows.push(new line(x, gamme[i%gamme.length], false));
           }
@@ -87,7 +87,13 @@
         for(let i = 0; i<data.length; i++){
             notes.push(new musicNote(data[i].xPos, data[i].row, 0));
             notes[i].pic = document.createElement("IMG");
-            console.log(i);
+            notes[i].pic.setAttribute("src", "assets/icons/flower08.png");
+            notes[i].pic.setAttribute("width", "20px");
+            notes[i].pic.setAttribute("height", "20px");
+            notes[i].stringID = "flower"+i;
+            notes[i].pic.setAttribute("ID", notes[i].stringID);
+            document.getElementById('NotesCanvas').appendChild(notes[i].pic);
+            //console.log(i);
           }
 
 
@@ -156,17 +162,23 @@
           console.log(this.row);
           this.yPos = rows[this.row].yPos;
           this.note = rows[this.row].note;
+          this.stringID;
           this.playing = false; // if playing, then don't start the trigger attack again
           this.synth = new Tone.Synth().toMaster();
           // for eventual sprites - for now we'll use colors
           this.display = function(){
             //color dot for starters
-            canvasContext.fillStyle = "green";
-            canvasContext.strokeStyle = "black";
-            canvasContext.lineWidth = 3;
-            canvasContext.rect(this.xPos, this.yPos, 20, 20);
-            canvasContext.stroke();
-            canvasContext.fill()
+            // canvasContext.fillStyle = "green";
+            // canvasContext.strokeStyle = "black";
+            // canvasContext.lineWidth = 3;
+            // canvasContext.rect(this.xPos, this.yPos, 20, 20);
+            // canvasContext.stroke();
+            // canvasContext.fill()
+
+            var canvas = document.getElementById("NotesCanvas");
+            var ctx = canvas.getContext("2d");
+            var icon = document.getElementById(this.stringID);
+            ctx.drawImage(icon, this.xPos, this.yPos, 30, 30);
             //canvasContext.drawImage("assets/icons/flower06.png", 20, 20);
           }
           this.checkPlayHead = function(){
@@ -386,7 +398,7 @@
 
     }
     </script>
-    <canvas id="NotesCanvas" width = 1500 height = 310>
+    <canvas id="NotesCanvas" width = 1500 height = 450>
     </canvas>
     <div>
       <!-- button to play -->
