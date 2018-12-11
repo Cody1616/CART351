@@ -32,7 +32,7 @@
                 }
               });
         // create a playhead that moves across the canvas and triggers notes it comes across
-        function flowerseGo(){
+      function flowerseGo(){
         let playHead1 = new playHead(10);
         let placePreview = new previewIcon();
         function drag(event){
@@ -59,7 +59,7 @@
                     987, 880, 784, 698, 659, 587, 554,
                     523, 493, 440, 392, 349, 330, 294,
                     262, 247, 220, 196, 174, 165, 147];
-        let icons = [];
+        //let icons = [];
 
         // lines on which the notes will be placed
         let rows = [];
@@ -86,6 +86,7 @@
         //notes.push(new musicNote(data.xPos, data.row, 0));
         for(let i = 0; i<data.length; i++){
             notes.push(new musicNote(data[i].xPos, data[i].row, 0));
+            notes[i].pic = document.createElement("IMG");
             console.log(i);
           }
 
@@ -146,6 +147,7 @@
         function musicNote(x, r, a){
           // x should be the position on the timeline, y should be
           // the line/note the square is on
+          this.pic;
           this.xPos = x;
           // this.yPos = y;
           // this.note = n;
