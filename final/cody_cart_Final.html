@@ -33,7 +33,7 @@
               });
         // create a playhead that moves across the canvas and triggers notes it comes across
       function flowerseGo(){
-        let playHead1 = new playHead(10);
+        let playHead1 = new playHead(0);
         let placePreview = new previewIcon();
         function drag(event){
           placePreview.drag(event);
@@ -59,8 +59,6 @@
                     987, 880, 784, 698, 659, 587, 554,
                     523, 493, 440, 392, 349, 330, 294,
                     262, 247, 220, 196, 174, 165, 147];
-        //let icons = [];
-
         // lines on which the notes will be placed
         let rows = [];
         for(let i = 0; i<28; i++){
@@ -87,7 +85,8 @@
         for(let i = 0; i<data.length; i++){
             notes.push(new musicNote(data[i].xPos, data[i].row, 0));
             notes[i].pic = document.createElement("IMG");
-            notes[i].pic.setAttribute("src", "assets/icons/flower08.png");
+            let iconSource = getIcons(data[i].color, data[i].shape);
+            notes[i].pic.setAttribute("src", iconSource);
             notes[i].pic.setAttribute("width", "20px");
             notes[i].pic.setAttribute("height", "20px");
             notes[i].stringID = "flower"+i;
@@ -95,8 +94,6 @@
             document.getElementById('NotesCanvas').appendChild(notes[i].pic);
             //console.log(i);
           }
-
-
         //bars
         let bars = [];
         for(let i = 0; i<5; i++){
@@ -194,76 +191,6 @@
               this.playing = false;
             }
           }
-          function getIcons(){
-            //pick the correct icon
-            switch(color){
-              case 1: switch(shape){
-                case 1:
-                break;
-                case 2:
-                break;
-                case 3:
-                break;
-                case 4:
-                break;
-                case 5:
-                break;
-              }
-              break;
-              case 2:switch(shape){
-                case 1:
-                break;
-                case 2:
-                break;
-                case 3:
-                break;
-                case 4:
-                break;
-                case 5:
-                break;
-              }
-              break;
-              case 3:switch(shape){
-                case 1:
-                break;
-                case 2:
-                break;
-                case 3:
-                break;
-                case 4:
-                break;
-                case 5:
-                break;
-              }
-              break;
-              case 4:switch(shape){
-                case 1:
-                break;
-                case 2:
-                break;
-                case 3:
-                break;
-                case 4:
-                break;
-                case 5:
-                break;
-              }
-              break;
-              case 5:switch(shape){
-                case 1:
-                break;
-                case 2:
-                break;
-                case 3:
-                break;
-                case 4:
-                break;
-                case 5:
-                break;
-              }
-              break;
-            }
-          }
         }
         // a function for when the user hits the play button
         function hitPlay(){
@@ -301,12 +228,15 @@
           this.xPos = x;
           this.display = function(){
             canvasContext.strokeStyle = "#000000"
-            canvasContext.fillStyle = "#FF0000";
+            canvasContext.fillStyle = "#000000";
             canvasContext.lineWidth = 5;
             canvasContext.beginPath();
             canvasContext.moveTo(this.xPos, 0);
             canvasContext.lineTo(this.xPos, canvas.height);
             canvasContext.stroke();
+            canvasContext.beginPath();
+            canvasContext.arc(this.xPos, 10, 10, 0, 2*Math.PI);
+            canvasContext.fill();
           }
           // for when the music is playing
           this.play = function(){
@@ -362,6 +292,79 @@
           }
           // on release - snap to nearest line
         }
+        //pick icons
+        function getIcons(color, shape){
+          //pick the correct icon
+          let iconLink;
+          switch(color){
+            case 1: switch(shape){
+              case 1: iconLink = "assets/icons/flower01.png";
+              break;
+              case 2: iconLink = "assets/icons/flower02.png";
+              break;
+              case 3: iconLink = "assets/icons/flower03.png";
+              break;
+              case 4: iconLink = "assets/icons/flower04.png";
+              break;
+              case 5: iconLink = "assets/icons/flower05.png";
+              break;
+            }
+            break;
+            case 2:switch(shape){
+              case 1: iconLink = "assets/icons/flower06.png";
+              break;
+              case 2: iconLink = "assets/icons/flower07.png";
+              break;
+              case 3: iconLink = "assets/icons/flower08.png";
+              break;
+              case 4: iconLink = "assets/icons/flower09.png";
+              break;
+              case 5: iconLink = "assets/icons/flower10.png";
+              break;
+            }
+            break;
+            case 3:switch(shape){
+              case 1: iconLink = "assets/icons/flower11.png";
+              break;
+              case 2: iconLink = "assets/icons/flower12.png";
+              break;
+              case 3: iconLink = "assets/icons/flower13.png";
+              break;
+              case 4: iconLink = "assets/icons/flower14.png";
+              break;
+              case 5: iconLink = "assets/icons/flower15.png";
+              break;
+            }
+            break;
+            case 4:switch(shape){
+              case 1: iconLink = "assets/icons/flower16.png";
+              break;
+              case 2: iconLink = "assets/icons/flower17.png";
+              break;
+              case 3: iconLink = "assets/icons/flower18.png";
+              break;
+              case 4: iconLink = "assets/icons/flower19.png";
+              break;
+              case 5: iconLink = "assets/icons/flower20.png";
+              break;
+            }
+            break;
+            case 5:switch(shape){
+              case 1: iconLink = "assets/icons/flower21.png";
+              break;
+              case 2: iconLink = "assets/icons/flower22.png";
+              break;
+              case 3: iconLink = "assets/icons/flower23.png";
+              break;
+              case 4: iconLink = "assets/icons/flower24.png";
+              break;
+              case 5: iconLink = "assets/icons/flower25.png";
+              break;
+            }
+            break;
+          }
+          return iconLink;
+        }
         //__________________________________A___J___A___X______________________________//
         $("#FlowerPick").submit(function(event) {
           //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
@@ -405,7 +408,7 @@
       <button id="playButton" type="button">Play</button>
       <button id="stopButton" type="button">Stop</button>
       <br><br>
-      <button id="createButton" type="button">Plant a flower</button>
+      <button id="createButton" type="button">Create a flower!</button>
     </div>
     <div id = "createNote" class = "form-popup">
       <h3>Select color and shape</h3>
@@ -417,17 +420,17 @@
           <input type="radio" name="color" value="4"> <span id = fColor4 class = circle></span>
           <input type="radio" name="color" value="5"> <span id = fColor5 class = circle></span>
           <br><br><br>
-          <input type="radio" name="shape" value="1"> <img src="assets/icons/flower01.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="2"> <img src="assets/icons/flower02.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="3"> <img src="assets/icons/flower03.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="4"> <img src="assets/icons/flower04.png" width = 50 height = 50>
-          <input type="radio" name="shape" value="5"> <img src="assets/icons/flower05.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="1"> <img src="assets/icons/flower26.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="2"> <img src="assets/icons/flower27.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="3"> <img src="assets/icons/flower28.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="4"> <img src="assets/icons/flower29.png" width = 50 height = 50>
+          <input type="radio" name="shape" value="5"> <img src="assets/icons/flower30.png" width = 50 height = 50>
 
           <br>
           Name:
           <input type="text" name="uName"><br>
           <h5> Use the Preview Icon to pick a spot for your flower!</h5>
-          <button id="pckSpotBtn" type = "submit">Pick a spot!</button>
+          <button id="pckSpotBtn" type = "submit">Plant your flower! (Make sure you picked a good spot!)</button>
           <br>
           <button id="cancelButton" type="button">Cancel</button>
 
