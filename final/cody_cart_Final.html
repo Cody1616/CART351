@@ -59,7 +59,7 @@
                 console.log("YEE");
               }
 
-            else if(event.pageX > playHead1.xPos && event.pageX > playHead1.xPos+2){
+            else if(event.pageX > playHead1.xPos && event.pageX < playHead1.xPos+2){
               playHead1.dragged = true;
             }
           });
@@ -124,8 +124,8 @@
         document.getElementById('NotesCanvas').appendChild(dead);
         //bars
         let bars = [];
-        for(let i = 0; i<5; i++){
-          bars.push(new bar(i*canvas.width/4, "black"));
+        for(let i = 0; i<17; i++){
+          bars.push(new bar(i*canvas.width/16, "black"));
         }
         // animate_______________animate__________________animate_____________________animate
         requestAnimationFrame(run);
@@ -182,7 +182,6 @@
           this.xPos = x;
           this.row = r;
           this.Age = a;
-          console.log(this.row);
           this.yPos = rows[this.row].yPos;
           this.note = rows[this.row].note;
           this.stringID; //ID of image element
@@ -195,20 +194,19 @@
                 var canvas = document.getElementById("NotesCanvas");
                 var ctx = canvas.getContext("2d");
                 var icon = document.getElementById(this.stringID);
-                ctx.drawImage(icon, this.xPos, this.yPos, 30, 30);
+                ctx.drawImage(icon, this.xPos-15, this.yPos-15, 30, 30);
               }
 
             this.checkAge = function(){
-              if(startTime+timePassed - this.Age > 0){
+              if(startTime+timePassed - this.Age > 10800000 ){
                   this.stringID = "deadFlower";
-                  console.log(this.stringID);
                   this.alive = false;
                 }
               }
           this.checkPlayHead = function(){
             if(this.alive){
             // checks if playhead is on note. if so, play tone
-            if (playHead1.xPos > this.xPos && playHead1.xPos < this.xPos+20){
+            if (playHead1.xPos > this.xPos-15 && playHead1.xPos < this.xPos+15){
               if(this.playing == false){
                 this.synth.triggerAttackRelease(this.note, "4n");
                 this.playing = true;
@@ -221,7 +219,6 @@
               }
             }
           }
-
         // a function for when the user hits the play button
         function hitPlay(){
           // create a new time to calculate the time passed since hitPlay
@@ -304,23 +301,23 @@
           preview = false;
         }
         function previewIcon(){
-          this.xPos = 0;
+          this.xPos = 36;
           // row position in the array
-          this.r = 0;
+          this.r = 5;
           this.synth = new Tone.Synth().toMaster();
           this.drag = false;
           this.display = function(){
-            canvasContext.fillStyle = "#00FF00";
-            canvasContext.rect(this.xPos, rows[this.r].yPos, 30, 30);
-            console.log(this.r);
-            canvasContext.stroke();
-            canvasContext.fill()
+            canvasContext.fillStyle = "#000000";
+            canvasContext.beginPath();
+            canvasContext.arc(this.xPos, rows[this.r].yPos, 15, 0, 2*Math.PI);
+            canvasContext.fill();
+            console.log("xpos: "+this.xPos+" row: "+this.r);
           }
 
           this.dragP = function(event){
             if(preview && this.drag && !playHead1.dragged){
-              this.xPos = event.pageX;
-              this.y = event.pageY;
+              this.xPos = event.clientX;
+              this.y = event.clientY;
               // snap to closest row
               let x = 0;
               for(let i = 0; i<rows.length; i++){
@@ -438,6 +435,22 @@
             success: function (response) {
               //reponse is a STRING (not a JavaScript object -> so we need to convert)
               console.log(response);
+              notes.push(new musicNote(placePreview.xPos, placePreview.r, startTime+timePassed));
+              let fTitle = "Created by " + data.get('user') + " on " + nowD.toString() + ".";
+              let noteCount = notes.length-1;
+              notes[noteCount].pic = document.createElement("IMG");
+              //console.log("test:: "+data.get('shape'));
+              let iconSource = getIcons(parseInt(data.get("color")), parseInt(data.get('shape')));
+            //  console.log(iconSource);
+              notes[noteCount].pic.setAttribute("src", iconSource);
+
+              notes[noteCount].pic.setAttribute("width", "20px");
+              notes[noteCount].pic.setAttribute("height", "20px");
+              notes[noteCount].stringID = "flower"+noteCount;
+              notes[noteCount].pic.setAttribute("ID", notes[noteCount].stringID);
+              notes[noteCount].pic.setAttribute("title", fTitle);
+              document.getElementById('NotesCanvas').appendChild(notes[noteCount].pic);
+              console.log("xpos: "+notes[noteCount].xPos+" row: "+notes[noteCount].row);
               //use the JSON .parse function to convert the JSON string into a Javascript object
               //  let parsedJSON = JSON.parse(response);
               //  console.log(parsedJSON);
