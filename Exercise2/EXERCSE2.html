@@ -8,6 +8,24 @@
       let canvas = document.getElementById('tilesCanvas');
       let canvasContext = canvas.getContext('2d');
 
+// color array
+      let cols = ["#FF00FF", "#000000", "#FFFF00", "#00FFFF"];
+
+// when clicked in, change color randomly
+      canvas.addEventListener("click", function(){
+        for(let i = 0; i<tiles.length; i++){
+          if(event.clientX>tiles[i].xPos && event.clientX<tiles[i].xPos + tiles[i].width &&
+          event.clientY>tiles[i].yPos && event.clientY<tiles[i].yPos + tiles[i].height){
+            let v = Math.floor(Math.random() * 3);
+          tiles[i].color = cols[v];
+          console.log(tiles[i].color);
+          console.log("clickc");
+          break;
+          }
+        }
+      });
+
+
       var d = new Date();
       var startTime = d.getTime();
       var timePassed;
@@ -17,9 +35,10 @@
         for(let j = 0; j<5; j++){
           if((i*5+j)%2 == 0){
             tiles.push(new tile(i*100, j*100, Math.PI));
+
           }
           else{
-            tiles.push(new tile(i*100, j*100, 0));
+           tiles.push(new tile(i*100, j*100, 0));
           }
         }
       }
@@ -27,11 +46,16 @@
       requestAnimationFrame(run);
       function run(){
         //clear canvas and run animation
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      //  console.log(canvas.width);
+
+
         for(let i = 0; i<tiles.length; i++){
           tiles[i].display();
+          tiles[i].update();
         }
         requestAnimationFrame(run);
+
       }
 
       function tile(x, y, o){
@@ -42,19 +66,24 @@
         this.offset = o;
         this.color = "#FFFFFF";
         this.sizeMult;
+
         this.update = function(){
           let currentTime = new Date();
           timePassed = currentTime.getTime() - startTime;
           // console.log(currentTime.getTime());
           this.sizeMult = Math.sin(timePassed/1000 + this.offset)/2+0.5;
-          this.width = 100*(Math.round(this.sizeMult*10)/10);
-          this.height = 100*(Math.round(this.sizeMult*10)/10);
+          this.width = 100*(Math.round(this.sizeMult*1000)/1000);
+          this.height = 100*(Math.round(this.sizeMult*1000)/1000);
+
+
+
+          //console.log(this.width);
         }
         this.display = function(){
-          this.update();
+
           canvasContext.strokeStyle = "black";
           canvasContext.fillStyle = this.color;// change the color we are using
-          canvasContext.rect(this.xPos, this.yPos, this.width, this.height);
+          canvasContext.fillRect(this.xPos, this.yPos, this.width, this.height);
           canvasContext.stroke();
           canvasContext.fill(); // set the fill
 

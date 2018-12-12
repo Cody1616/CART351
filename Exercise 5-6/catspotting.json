@@ -1,10 +1,11 @@
   {
     "Label":"Cody's Catspotting Log",
     "Sublabel":"Cats!",
+    "Cats Spotted": 7,
     "Days":
-      {
-          "Cats Spotted": 2,
-          "Cat1":
+      [
+
+
                 {
                   "Image":"cat_img/20170817.jpg",
                   "Sex":"???",
@@ -17,7 +18,7 @@
                   "Description":"I encountered a black cat, but did not feel unlucky at all!"
 
             },
-          "Cat2":
+
                   {
                     "Image":"cat_img/20170903.jpg",
                     "Sex":"Male",
@@ -29,7 +30,7 @@
                     "Date": "2017-09-13",
                     "Description":"Was at a cat cafe, he was a new cat and tried to eat my sandwich."
               },
-          "Cat3":
+
                     {
                       "Image":"cat_img/20180125.jpg",
                       "Sex":"Female",
@@ -41,7 +42,7 @@
                       "Date": "2018-01-25",
                       "Description":"My aunt's cat, Misty."
                 },
-          "Cat4":
+
                       {
                         "Image":"cat_img/20180704.jpg",
                         "Sex":"???",
@@ -53,7 +54,7 @@
                         "Date": "2018-07-04",
                         "Description":"Lazy"
                   },
-          "Cat5":
+
                         {
                           "Image":"cat_img/20180715.jpg",
                           "Sex":"Female",
@@ -65,7 +66,7 @@
                           "Date": "2018-07-15",
                           "Description":"Puffin is shy around visitors, and extremely fluffy."
                     },
-          "Cat6":
+
                           {
                             "Image":"cat_img/20180802.jpg",
                             "Sex":"Female",
@@ -77,7 +78,7 @@
                             "Date": "2018-08-02",
                             "Description":"Came to greet me while I was moving out, I guess she wanted to say goodbye?"
                       },
-            "Cat6":
+
                       {
                     "Image":"cat_img/20180815.jpg",
                     "Sex":"Male",
@@ -88,8 +89,8 @@
                     "Time": "7:49PM",
                     "Date": "2018-08-15",
                     "Description":"A friend's cat. He's very squeaky and is prone to run around for seemingly no reason."
-                                  },
+                    }
 
 
-      }
+      ]
   }

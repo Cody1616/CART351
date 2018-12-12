@@ -56,10 +56,9 @@
 
             if(preview && event.clientX > placePreview.xPos && event.clientX<placePreview.xPos +30){
                 placePreview.drag = true;
-                console.log("YEE");
               }
 
-            else if(event.pageX > playHead1.xPos && event.pageX < playHead1.xPos+2){
+            else if(event.pageX > playHead1.xPos && event.pageX < playHead1.xPos+20){
               playHead1.dragged = true;
             }
           });
@@ -73,6 +72,7 @@
           // canvas.addEventListener("mousedown", startDragPrev);
           canvas.addEventListener("mousemove", dragPrev);
           canvas.addEventListener("mouseup", stopDragPrev);
+
         // bool for position picking stage
         var preview = false;
         var d = new Date();
@@ -100,10 +100,9 @@
         }
         // create and initialize an array of music notes (for testing purposes, they will be created by users in the final prototype)
         let notes = [];
-        console.log("here:: "+data);
         for(let i = 0; i<data.length; i++){
             notes.push(new musicNote(data[i].xPos, data[i].row, data[i].creationTime));
-            let fTitle = "Created by " + data[i].user + " on " + data[i].creationDate + ".";
+            notes[i].description = "Created by " + data[i].user + " on " + data[i].creationDate + ".";
             notes[i].pic = document.createElement("IMG");
 
             let iconSource = getIcons(data[i].color, data[i].shape);
@@ -113,15 +112,37 @@
             notes[i].pic.setAttribute("height", "20px");
             notes[i].stringID = "flower"+i;
             notes[i].pic.setAttribute("ID", notes[i].stringID);
-            notes[i].pic.setAttribute("title", fTitle);
             document.getElementById('NotesCanvas').appendChild(notes[i].pic);
             //console.log(i);
           }
 
         let dead = document.createElement("IMG");
-        dead.setAttribute("ID", "deadFlower")
+        dead.setAttribute("ID", "deadFlower");
         dead.setAttribute("src", "assets/icons/flowerdead.png");
         document.getElementById('NotesCanvas').appendChild(dead);
+
+        let label = document.createElement("p");
+        label.setAttribute("ID", "label");
+        label.setAttribute("style", "display:none");
+        document.getElementsByTagName("body")[0].appendChild(label);
+
+        canvas.addEventListener("mousemove", function(){
+          // going backwards so if a flower is placed on top of a dead flower, the newest flwer gets the label.
+          for(let i = notes.length-1; i>0; i--){
+            if(event.pageX > notes[i].xPos && event.pageX < notes[i].xPos+30 && event.pageY > rows[notes[i].row].yPos && event.pageY < rows[notes[i].row].yPos+30){
+
+              document.getElementById("label").innerHTML = notes[i].description;
+              document.getElementById("label").setAttribute("left", notes[i].xPos);
+              document.getElementById("label").setAttribute("top",rows[notes[i].row].yPos);
+              document.getElementById("label").setAttribute("style", "display:inline");
+              break;
+            }
+            else{
+              document.getElementById("label").setAttribute("style", "display:none");
+            }
+          }
+
+        });
         //bars
         let bars = [];
         for(let i = 0; i<17; i++){
@@ -185,6 +206,7 @@
           this.yPos = rows[this.row].yPos;
           this.note = rows[this.row].note;
           this.stringID; //ID of image element
+          this.description;
           this.alive = true;
           this.playing = false; // if playing, then don't start the trigger attack again
           this.synth = new Tone.Synth().toMaster();
@@ -464,6 +486,7 @@
       }
     }
     </script>
+    <div id="main">
     <canvas id="NotesCanvas" width = 1500 height = 465>
     </canvas>
     <div>
@@ -499,5 +522,6 @@
 
         </form>
       </div>
+    </div>
   </body>
 </html>

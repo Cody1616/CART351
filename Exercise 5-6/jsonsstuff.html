@@ -43,52 +43,152 @@
 
      let sampleHeader = $("<h1>");
      $(sampleHeader).text(data.Label);
-     $(sampleHeader).appendTo(header);
+     $(sampleHeader).appendTo($("header"));
 
 
      let samplePara = $("<p>");
-     console.log(data.SubLabel);
      $(samplePara).text(data.SubLabel);
-     $(samplePara).appendTo(header);
+     $(samplePara).appendTo($("header"));
 
    }
 
 // function to display entries
    function showCats(data){
-   // make array
-   let cats = data['Days'];
-   $(cats).show();
 
+     // our array of each book objects
+     // make a book array
+     let cats = data['Days'];
+ //load all and assign style headers
+     for (var i = 0; i < cats.length; i++) {
+       let sampleCatEntry = $('<article>');
+       let sampleIMG = $('<img>');
+       let sampleH2 =("<h2>");
+       let samplePara1 = $("<p>");
+       let samplePara2 = $("<p>");
+       let samplePara3 = $("<p>");
+       let samplePara4 = $("<p>");
+       let samplePara5 = $("<p>");
+       let sampleList= $("<ul>");
+       let sampleDiv= $("<div>");
 
-//load all and assign style headers
+       // .text() function?
+       // .append()
+       $(sampleIMG).attr('src', cats[i].Image);
+       $(sampleIMG).attr('width', "500px");
+       $(sampleIMG).attr('height', "500px");
+       $(sampleH2).text(cats[i].Name);
+       console.log(cats[i].Name);
+       $(samplePara1).text("Sex: "+cats[i].Sex);
+       //$(samplePara1).text(cats[i].Appearance);
+       $(samplePara2).text("Eye Color: "+cats[i].Eyes);
+       $(samplePara3).text("Location: "+cats[i].Location);
+       $(samplePara4).text("Time: " + cats[i].Date +", "+cats[i].Time);
+       $(samplePara5).text("Description: " + cats[i].Description);
+       //$(samplePara4).text(cats[i].Date);
 
-   } //cats log
+       // assign price
+       $(sampleH2).appendTo(sampleDiv);
+       $(sampleDiv).appendTo(sampleCatEntry);
+       $(sampleIMG).appendTo(sampleCatEntry);
+       $(samplePara1).appendTo(sampleCatEntry);
+       $(samplePara2).appendTo(sampleCatEntry);
+       $(samplePara3).appendTo(sampleCatEntry);
+       $(samplePara4).appendTo(sampleCatEntry);
+       $(samplePara5).appendTo(sampleCatEntry);
+       $(sampleList).appendTo(sampleCatEntry);
+
+       $("section").append(sampleCatEntry);
+     } //cats
+   }
 });
 
 
 
 </script>
-
-
-
   </head>
+<style>
 
+  html {
+    font-family: 'helvetica neue', helvetica, arial, sans-serif;
+  }
 
+  body {
+    width: 100%;
+  }
+  /* header styles */
+
+  h1 {
+    margin-left:30vw;
+  }
+
+  h2 {
+    margin-left:30vw;
+    display:block;
+  }
+
+  header p {
+    font-weight: bold;
+    margin-left:30vw;
+  }
+  section{
+    margin-left:25vw;
+    min-width: 500px;
+  }
+
+  section div{
+
+    background:#9FE6FF;
+    padding:2%;
+
+  }
+
+  /* section styles */
+
+  section article {
+    margin-left:2%;
+    margin-right:20%;
+    margin-bottom:2%;
+    background:#51C0E7;
+    padding:2%;
+  }
+
+  section p {
+    font-size:1em;
+    font-weight: bold;
+  }
+
+  section ul {
+    margin-top: 0;
+    font-size:1em;
+  }
+  img {
+    display:block;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    letter-spacing: -5px;
+    margin-bottom: 10px;
+  }
+  #getData{
+    background:orange;
+    width:100px;
+    margin:2%;
+  }
+  </style>
 
   <body>
+  <input type="button" id="getData" value="Load Data" />
+      <header>
+
+      </header>
+
+      <section>
+
+      </section>
 
 
 
-
-<!-- just a css test -->
-    <!-- <div class="top">
-<h3>Name</h1>
-<h5>Date</h1>
-<img src="anfisa.jpg"></img>
-</div>
-<div class = "bottom">
-<p>Description<br>Description<br>Description<br>Description</p>
-</div> -->
   </body>
 
 </html>

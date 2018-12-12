@@ -3,7 +3,11 @@ body {
 }
 h1{
 }
-p{
+#label{
+  position:absolute;
+  z-index: 1;
+  margin-left: 20px;
+  color: green;
 }
 .circle{
   height: 40px;
@@ -52,8 +56,14 @@ p{
   /* overflow-x: hidden; */
   transition: 0.5s;
 }
+
+#main{
+  position: absolute;
+  z-index: 0;
+}
 canvas{
-  margin:10px;
+  /* margin:10px; */
+
   background-color: #92F3A6;
   border-style: solid;
   border-width: 5px;
