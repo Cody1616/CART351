@@ -1,0 +1,272 @@
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+  /*** THIS EX SHOWS THE BASIC SETUP ****/
+  //only run this once the window loads
+  window.onload = function(){
+
+//add an audio context
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// define audio context
+
+// step 1 access the canvas element && the graphics context....
+let canvas = document.getElementById('testCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// max number ellipses
+const MAX_LINES =25;
+//array to hold objects
+let myLineList = [];
+//make some possible colors
+let colors = ["#8ED6FF","#c379e5","#e22626","#61f495","#4953c1","#ffb807","#ffc907"];
+
+// max number ellipses
+const MAX_NOTES =25;
+//array to hold objects
+let myNoteList = [];
+//make some possible colors
+
+
+canvas.addEventListener('mouseup',(event)=>{
+for(let i=0; i< myLineList.length; i++){
+  myLineList[i].hitTest(event);
+}
+});
+
+canvas.addEventListener('mousemove',(event)=>{
+for(let i=0; i< myLineList.length; i++){
+  myLineList[i].moveTest(event);
+}
+});
+
+//add some notes
+//fill the array with objects
+for (let i =0; i< MAX_NOTES;i++){
+// have different parameters for each ellipse object
+let randomValX = Math.floor((Math.random() * 400) + 1);
+let randomValY = Math.floor((Math.random() * 400) + 1);
+  myNoteList.push(new myNote(randomValX,randomValY,10,colors[i%colors.length],0,0,i));
+}
+//x,y,changeInX,changeInY,color,xSpeed,ySpeed -> moves on x (purple)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,0,colors[1],50,0));
+// moves on y (red)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2+80,0,1,colors[2],0,40));
+
+myLineList.push(new myLine(canvas.width/2+80,canvas.height/2+80,0,1,colors[4],0,40));
+
+myLineList.push(new myLine(canvas.width/2,canvas.height/2+200,0,1,colors[0],0,40));
+
+myLineList.push(new myLine(canvas.width/2+200,canvas.height/2+200,0,1,colors[6],0,40));
+
+myLineList.push(new myLine(canvas.width/2+50,canvas.height/2-200,0,1,colors[6],0,40));
+//moves on x and y (green)
+//myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,1,colors[3],5,1));
+
+requestAnimationFrame(runAni);
+
+// this is our callback function (to simulate a loop ... )
+function runAni(){
+  //need to reset the background :)
+  // clear the canvas ...
+  for (let i =0; i< myLineList.length;i++){
+
+//check if we have a delay running -> why? because of the mouse over ...
+//new ...
+  if(myLineList[i].timerRunning ===true){
+    myLineList[i].currentTime = new Date().getTime()- myLineList[i].startTimer;
+    if(myLineList[i].currentTime>1000){
+      myLineList[i].timerRunning =false;
+    }
+
+  }
+} //end check
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+//draw notes
+  for (let i =0; i< MAX_NOTES;i++){
+  // have different parameters for each ellipse object
+      myNoteList[i].render();
+  }
+
+  // go through each object and perform required ops
+  //here we only go through for how many objects we have
+  for (let i =0; i< myLineList.length;i++){
+    myLineList[i].render();
+
+  }
+  // recursive call ...
+  requestAnimationFrame(runAni);
+}
+
+/*** MY _NOTE OBJECT ***/
+function myNote(x,y,r,c,xSpeed,ySpeed,initId){
+  //member variables
+  this.xPos = x;
+  this.yPos = y;
+  this.radius = r;
+  this.ellipseColor = c;
+
+  // new for updating
+  this.xSpeed = xSpeed;
+  this.ySpeed =ySpeed;
+
+  this.freqVal =  220+(initId*16);
+  this.note = new Sound(audioContext); //make an instance...
+
+//member function
+  this.render =function(){
+      canvasContext.fillStyle = this.ellipseColor;// change the color we are using
+      canvasContext.beginPath();
+      canvasContext.arc(this.xPos,this.yPos,this.radius,0, Math.PI * 2, true);
+      canvasContext.fill(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+    //to check if we collided with the line ...
+    this.isCollidedWith =function(x,y){
+      //console.log("checking");
+      if(Math.sqrt(Math.pow((x-this.xPos),2) + Math.pow((y-this.yPos),2))< this.radius){
+        //console.log(`hit test with line`);
+        let now = audioContext.currentTime;
+        this.note.offsetDuration =15;
+        this.note.play(this.freqVal, now);
+        //play a note ...
+        return true;
+      }
+      return false;
+    }//end collide
+  } //end MyNote
+
+/*** MY LINE OBJECT ***/
+function myLine(x,y,lengthX,lengthY,c,xSpeed,ySpeed){
+  //member variables
+  this.xPos = x;
+  this.yPos = y;
+  this.changeInX = lengthX;
+  this.changeInY = lengthY;
+  this.lineColor = c;
+
+  // new for updating
+  this.xSpeed = xSpeed;
+  this.ySpeed =ySpeed;
+
+  this.maxXLength=100;
+  this.maxYLength=100;
+    //new
+  this.ellRadius =2;
+  this.isPressed =false;
+  this.timerRunning =false;
+  this.startTimer=0;
+  this.currentTime =0;
+
+//member function
+  this.render =function(){
+      canvasContext.beginPath();
+      canvasContext.moveTo(this.xPos,this.yPos); //where to start
+      canvasContext.lineTo(this.xPos+this.changeInX,this.yPos+this.changeInY); //where are we going
+      //point from -> to
+      canvasContext.strokeStyle = this.lineColor;// change the color we are using
+      canvasContext.lineWidth=2; //change stroke weight
+      canvasContext.stroke(); // set the fill
+      canvasContext.closePath(); //close a path ...
+
+      canvasContext.beginPath();
+      // arc (x,y,radius, startAngle,endAngle,isCounterClockwise)
+      canvasContext.fillStyle = this.lineColor;// change the color we are using
+      canvasContext.arc(this.xPos+this.changeInX,this.yPos+this.changeInY,this.ellRadius,0,Math.PI*2, true);
+      canvasContext.fill(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+
+      //member function for updating
+      this.hitTest= function(event){
+        if(this.timerRunning ===false){
+        if(Math.sqrt(Math.pow((event.clientX-(this.xPos+this.changeInX)),2) + Math.pow((event.clientY - (this.yPos+this.changeInY)),2))< this.ellRadius){
+          console.log(`ellipse hit`);
+         this.isPressed =false;
+         this.startTimer = new Date().getTime();
+         //set timer running
+         this.timerRunning =true;
+
+         //check if over other ellipse
+         for(let i = 0; i< myNoteList.length; i++){
+           if(myNoteList[i].isCollidedWith(this.xPos+this.changeInX,this.yPos+this.changeInY)){
+             break;
+           }
+         }
+       }
+     }
+   }
+   this.moveTest = function(){
+     if(this.timerRunning ===false){
+     if(Math.sqrt(Math.pow((event.clientX-(this.xPos+this.changeInX)),2) + Math.pow((event.clientY - (this.yPos+this.changeInY)),2))< this.ellRadius){
+       console.log(`ellipse move`);
+       this.isPressed =true;
+       }
+      if(this.isPressed===true){
+        //calculate how to change the line (move with the mouse)
+       this.changeInX = (event.clientX-this.xPos);
+       this.changeInY = (event.clientY-this.yPos);
+      }
+    } //timer
+   }
+  } //end myLine
+
+  /*** class for sound  inspired and copy-lefted from::
+  https://css-tricks.com/introduction-web-audio-api/*/
+function Sound (context) {
+  this.context = context;
+  this.offsetDuration =0;
+
+
+this.init =function () {
+  this.oscillator = this.context.createOscillator();
+  //for volume
+  this.gainNode = this.context.createGain();
+
+  this.oscillator.connect(this.gainNode);
+  this.gainNode.connect(this.context.destination);
+  this.oscillator.type = 'sine';
+}
+
+this.play = function (value, time) {
+  this.init();
+
+  this.oscillator.frequency.value = value;
+  //set gain
+  this.gainNode.gain.setValueAtTime(1, this.context.currentTime);
+
+  this.oscillator.start(time);
+  // How LONG should duration of note be?
+  this.stop(time+this.offsetDuration);
+
+}
+
+
+  this.stop = function(time) {
+  // gradual change in value
+  this.gainNode.gain.exponentialRampToValueAtTime(0.001, time + 1);
+  this.oscillator.stop(time + 0);
+  }
+}//end SOund object
+
+}//end window onload
+  </script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

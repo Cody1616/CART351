@@ -1,0 +1,110 @@
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+  /*** THIS EX SHOWS THE BASIC SETUP ****/
+  //only run this once the window loads
+  window.onload = function(){
+// step 1 access the canvas element && the graphics context....
+let canvas = document.getElementById('testCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// max number ellipses
+const MAX_LINES =25;
+//array to hold objects
+let myLineList = [];
+//make some possible colors
+let colors = ["#8ED6FF","#c379e5","#e22626","#61f495","#4953c1","#ffb807","#ffc907"];
+
+//x,y,changeInX,changeInY,color,xSpeed,ySpeed -> moves on x (purple)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,0,colors[1],1,0));
+// moves on y (red)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2,0,1,colors[2],0,1));
+//moves on x and y (green)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,1,colors[3],5,1));
+
+requestAnimationFrame(runAni);
+
+// this is our callback function (to simulate a loop ... )
+function runAni(){
+  //need to reset the background :)
+  // clear the canvas ...
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+  // go through each object and perform required ops
+  //here we only go through for how many objects we have
+  for (let i =0; i< myLineList.length;i++){
+    myLineList[i].updateX();
+    myLineList[i].updateY();
+    myLineList[i].render();
+
+  }
+  // recursive call ...
+  requestAnimationFrame(runAni);
+}
+
+
+function myLine(x,y,lengthX,lengthY,c,xSpeed,ySpeed){
+  //member variables
+  this.xPos = x;
+  this.yPos = y;
+  this.changeInX = lengthX;
+  this.changeInY = lengthY;
+  this.lineColor = c;
+
+  // new for updating
+  this.xSpeed = xSpeed;
+  this.ySpeed =ySpeed;
+
+  //new
+  this.maxXLength=100;
+  this.maxYLength=100;
+
+//member function
+  this.render =function(){
+      canvasContext.beginPath();
+      canvasContext.moveTo(this.xPos,this.yPos); //where to start
+      canvasContext.lineTo(this.xPos+this.changeInX,this.yPos+this.changeInY); //where are we going
+      //point from -> to
+      canvasContext.strokeStyle = this.lineColor;// change the color we are using
+      canvasContext.lineWidth=2; //change stroke weight
+      canvasContext.stroke(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+  //member function for updating
+  this.updateX = function(){
+      if(this.xSpeed>0){
+       if(this.changeInX<this.maxXLength){
+         this.changeInX+=this.xSpeed;
+       }
+      }
+    }
+     //member function for updating
+     this.updateY= function(){
+          if(this.ySpeed>0){
+            if(this.changeInY<this.maxYLength){
+              this.changeInY+=this.ySpeed;
+            }
+          }
+      }
+  } //end myLine
+}//end window onload
+  </script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

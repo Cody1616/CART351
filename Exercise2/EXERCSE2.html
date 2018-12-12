@@ -1,0 +1,68 @@
+<html>
+<head>
+  <title> cody exercise 2</title>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let canvas = document.getElementById('tilesCanvas');
+      let canvasContext = canvas.getContext('2d');
+
+      var d = new Date();
+      var startTime = d.getTime();
+      var timePassed;
+
+      let tiles = [];
+      for(let i = 0; i<5; i++){
+        for(let j = 0; j<5; j++){
+          if((i*5+j)%2 == 0){
+            tiles.push(new tile(i*100, j*100, Math.PI));
+          }
+          else{
+            tiles.push(new tile(i*100, j*100, 0));
+          }
+        }
+      }
+
+      requestAnimationFrame(run);
+      function run(){
+        //clear canvas and run animation
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        for(let i = 0; i<tiles.length; i++){
+          tiles[i].display();
+        }
+        requestAnimationFrame(run);
+      }
+
+      function tile(x, y, o){
+        this.width = 100;
+        this.height = 100;
+        this.xPos = x;
+        this.yPos = y;
+        this.offset = o;
+        this.color = "#FFFFFF";
+        this.sizeMult;
+        this.update = function(){
+          let currentTime = new Date();
+          timePassed = currentTime.getTime() - startTime;
+          // console.log(currentTime.getTime());
+          this.sizeMult = Math.sin(timePassed/1000 + this.offset)/2+0.5;
+          this.width = 100*(Math.round(this.sizeMult*10)/10);
+          this.height = 100*(Math.round(this.sizeMult*10)/10);
+        }
+        this.display = function(){
+          this.update();
+          canvasContext.strokeStyle = "black";
+          canvasContext.fillStyle = this.color;// change the color we are using
+          canvasContext.rect(this.xPos, this.yPos, this.width, this.height);
+          canvasContext.stroke();
+          canvasContext.fill(); // set the fill
+
+        }
+      }
+    }
+  </script>
+  <canvas id="tilesCanvas" width="500px" height="500px" style ="background-color:blue">
+  </canvas>
+</body>
+</html>

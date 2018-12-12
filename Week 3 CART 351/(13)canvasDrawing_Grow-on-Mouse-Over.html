@@ -1,0 +1,162 @@
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+  /*** THIS EX SHOWS THE BASIC SETUP ****/
+  //only run this once the window loads
+
+  /** IF I CLICK ON ELLIPSE IT MOVES - IF I CLICK ON ELLIPSE AGAIN IT STOPS*/
+  window.onload = function(){
+// step 1 access the canvas element && the graphics context....
+let canvas = document.getElementById('testCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// max number ellipses
+const MAX_ELLIPSES =1;
+//array to hold objects
+let myEllipses = [];
+//make some possible colors
+let colors = ["#8ED6FF","#c379e5","#e22626","#61f495","#4953c1","#ffb807","#ffc907"];
+
+//fill the array with objects
+for (let i =0; i< MAX_ELLIPSES;i++){
+  console.log(myEllipses.length);
+// have different parameters for each ellipse object
+let objW = 80;
+let offsetX =10;
+myEllipses.push(new myRunningEllipse((i*(objW+offsetX))+canvas.width/2,canvas.height/2,objW/2,colors[i%colors.length],(i%5)+1,(i%6)+2,i));
+}
+
+
+//initial display:::
+for(let i=0; i< myEllipses.length;i++){
+ myEllipses[i].render();
+  // no update
+}
+
+
+// add an event listener
+//add event listener to the WHOLE canvas (new)
+canvas.addEventListener('mousemove', (event) => {
+   console.log('canvas mousemove');
+   for (let i =0; i< myEllipses.length;i++){
+     // test if is over an ellipse
+     myEllipses[i].hitTestOver(event);
+   }
+
+});
+//start animation
+  requestAnimationFrame(runAni);
+
+// add in animation
+function runAni(){
+  //need to reset the background :)
+  // clear the canvas ...
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i =0; i< myEllipses.length;i++){
+    //myEllipses[i].revealFixed();
+    myEllipses[i].revealDynamic();
+    myEllipses[i].render();
+
+  }
+
+  // recursive call ...
+  requestAnimationFrame(runAni);
+}
+
+
+
+function myRunningEllipse(x,y,r,c,xSpeed,ySpeed,tempId){
+  //member variables
+  this.xPos = x;
+  this.yPos = y;
+  this.radius = r;
+  this.ellipseColor = c;
+
+  // new for updating
+  this.xSpeed = xSpeed;
+  this.ySpeed =ySpeed;
+  this.ellipseID = tempId;
+
+  // new :: have a boolean to test if this is active (down)
+  this.isPressed =false;
+
+  // new :: have a boolean to test if this is active (over)
+  this.isOver =false;
+
+// new have a var for opacity
+  this.currentOpacity =1.0;
+
+  this.constrainedDiff =0;
+  this.previousX = this.xPos;
+
+//member function
+  this.render =function(){
+      canvasContext.fillStyle = this.ellipseColor;// change the color we are using
+      canvasContext.beginPath();
+      canvasContext.globalAlpha = this.currentOpacity;
+      canvasContext.arc(this.xPos,this.yPos,this.radius,0, Math.PI * 2, true);
+      canvasContext.fill(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+
+   //member function for updating - FIXED SPEED
+   this.revealFixed = function(){
+     if(this.isOver ===true){
+       this.radius+=0.1;
+    }
+
+    }
+
+    //member function for updating - FIXED SPEED
+    this.revealDynamic = function(){
+      if(this.isOver ===true){
+        // don't scale in certain circumastances
+        if(this.radius+this.constrainedDiff<40){this.radius =40;}
+        else if(this.radius+this.constrainedDiff>canvas.width/2) {this.radius =canvas.width/2;}
+        else {this.radius+=this.constrainedDiff;}
+     }
+
+     }
+
+     //hit test over
+     this.hitTestOver =function(event){
+       //use distance formula to region test
+       if(Math.sqrt(Math.pow((event.clientX-this.xPos),2) + Math.pow((event.clientY - this.yPos),2))< this.radius){
+         console.log(`ellipse ${this.ellipseID} has mouse over`);
+         //set the boolean to true
+         this.isOver =true;
+         // use MOUSE SPEED FOR SCALAR ...
+         let diffX = event.clientX - myEllipses[0].previousX;
+         // update previousX
+          this.previousX = event.clientX;
+          //make sure that it falls between a min and max
+          this.constrainedDiff = Math.min(Math.max(diffX, -40), 40);
+        }
+       //not hitting? make it false
+       else{
+         this.isOver =false;
+         this.previousX = event.clientX;
+       }
+     }
+  } //end myRunningEllipse
+}//end window onload
+  </script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

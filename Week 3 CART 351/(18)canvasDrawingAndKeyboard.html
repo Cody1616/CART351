@@ -1,0 +1,157 @@
+
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+
+  window.onload = function(){
+
+    // step 1 access the canvas element && the graphics context....
+    let canvas = document.getElementById('testCanvas');
+    let canvasContext = canvas.getContext('2d');
+    let letterList = [];
+    let startTime =0;
+    let currentTime =0;
+    let wordsPoss = ["cucumber","banAnas","strawberries", "Lunch", "cherries", "PineApple", "Stripey Tamatoes"];
+
+    let currentWord = new myWord("Got it?",canvas.width/2-50,canvas.height/2);
+
+
+    startTime = new Date().getTime();
+
+
+    // lets add a key ...
+    window.addEventListener("keypress",(event)=>{
+    //  console.log(console.log(event));
+      //the event is an object with all kind of properties...
+      //console.log(event.key); // this is the letter
+      //lets push into the letter array ...
+      //range is originally between 0 and 1
+      let randomValX = Math.floor((Math.random() * 400) + 1);
+      let is = currentWord.wordTyped.indexOf(event.key);
+     if(is >=0){
+      letterList.push(new myLetter(event.key,randomValX,-10,true));
+      //capture HOW LONG IT WILL BE UNTIL WE PRESS ANOTHER KEY
+      startTime = new Date().getTime();
+    }
+    else{
+      console.log("sorry ... ");
+      letterList.push(new myLetter(event.key,randomValX,-10,false));
+    }
+
+    });
+
+    requestAnimationFrame(runAni);
+
+    function runAni(){
+
+        currentTime = new Date().getTime() - startTime;
+      //  console.log(currentTime);
+      //need to reset the background :)
+      // clear the canvas ...
+      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+      currentWord.renderWord();
+      currentWord.update();
+
+      for (let i =0; i< letterList.length;i++){
+        //myEllipses[i].update();
+      letterList[i].renderLetter();
+      letterList[i].updateLetter();
+
+      }
+
+        // recursive call ...
+      requestAnimationFrame(runAni);
+  }
+
+      function myLetter(letter,x,y,isIn){
+        this.fontString = "40px Arial";
+        this.letterTyped = letter;
+        this.xPos = x;
+        this.yPos = y;
+        this.isAPartOf = isIn;
+
+        this.renderLetter = function(){
+        canvasContext.globalAlpha = 1.0;
+        canvasContext.font = this.fontString;
+        if(isIn ===true){
+        canvasContext.fillStyle = "#FFFFFF";
+       }
+       else {
+       canvasContext.fillStyle = "#FF0000";
+      }
+        canvasContext.fillText(this.letterTyped,this.xPos,this.yPos);
+      }
+
+      this.updateLetter =function(input){
+      let yOffset = currentTime/1000;
+        this.yPos+=yOffset;
+        if(this.yPos>canvas.height){
+          // find letter in the array and remove
+          for( let i = 0; i < letterList.length; i++)
+          {
+            if (letterList[i].letterTyped === this.letterTyped) {
+                  letterList.splice(i, 1);
+                  console.log("found");
+                  break;
+             }
+          }
+          console.log(letterList.length);
+        }//end if
+      }
+    } //end letter object
+
+    function myWord(word,x,y){
+      this.fontString = "58px Arial";
+      this.wordTyped = word;
+      this.xPos = x;
+      this.yPos = y;
+      this.alpha = 1.0;
+
+      this.renderWord= function(){
+      canvasContext.font = this.fontString;
+      canvasContext.globalAlpha = this.alpha;
+      canvasContext.fillStyle = "#FFFFFF";
+      canvasContext.fillText(this.wordTyped,this.xPos-120,this.yPos);
+    }
+
+    this.update =function(){
+    //  console.log(this.alpha);
+      if(this.alpha <=0){
+        let randomIndex = Math.floor((Math.random() * wordsPoss.length) + 0);
+      //  console.log(randomIndex);
+        this.wordTyped = wordsPoss[randomIndex];
+        this.alpha = 1.0;
+        //restart
+        startTime = new Date().getTime();
+      }
+      else{
+        //console.log(currentTime/10000)
+        this.alpha = 1.0 - (currentTime/10000);
+      }
+    }
+
+  }
+  //end on windowload
+}
+
+</script>
+</head>
+<body>
+<canvas id="testCanvas" width="800" height="800">
+
+</canvas>
+</body>
+</html>

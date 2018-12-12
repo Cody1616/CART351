@@ -1,0 +1,58 @@
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+  /*** THIS EX SHOWS THE BASIC SETUP ****/
+  //only run this once the window loads
+  window.onload = function(){
+// step 1 access the canvas element && the graphics context....
+let canvas = document.getElementById('testCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// note how we can use variables to generalize...
+let lineLength = 100;
+let x1 = canvas.width/2;
+let y1 =canvas.height/2;
+let x2 = x1+lineLength;
+let y2 = canvas.height/2;
+let x3 = x1+(lineLength/2);
+let y3 = y1-lineLength;
+
+// lets draw a triangle:
+
+//The lineTo() method adds a new point and creates a line
+//TO that point FROM the last specified point in the canvas
+//(this method does not draw the line) -rather the stroke/fill does.
+canvasContext.beginPath(); //start a path
+canvasContext.moveTo(x1,y1); //where to start drawing
+canvasContext.lineTo(x2,y2); //lineTo(where to go from last...)
+canvasContext.lineTo(x3,y3);
+canvasContext.lineTo(x1,y1);
+//would usually be black
+canvasContext.fillStyle = "#8ED6FF"; // change the color we are using
+canvasContext.fill();
+
+canvasContext.strokeStyle = "#FFFFFF"; // change the color we are using
+canvasContext.lineWidth =2;
+canvasContext.stroke();
+canvasContext.closePath(); //end a path ...
+  }//end window onload
+  </script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

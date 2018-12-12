@@ -1,0 +1,199 @@
+<!--https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API -->
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+
+  window.onload = function(){
+
+
+    //add an audio context
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // define audio context
+    // Webkit/blink browsers need prefix, Safari won't work without window.
+    // step 1 access the canvas element && the graphics context....
+    let canvas = document.getElementById('testCanvas');
+    let canvasContext = canvas.getContext('2d');
+    let colors = ["#8ED6FF","#c379e5","#e22626","#61f495","#4953c1","#ffb807","#ffc907"];
+    let boxes = [];
+
+  for(let i=0; i<5;i++){
+    boxes.push(new AudioBox(i*60+100,canvas.height/2,50,50,colors[i%colors.length],i));
+  }
+
+  for(let i =0; i<boxes.length; i++){
+    boxes[i].renderBox();
+  }
+  canvas.addEventListener('mousedown',(event)=>{
+
+    for(let i =0; i<boxes.length; i++){
+      boxes[i].hitTest(event);
+    }
+
+  });
+
+
+  canvas.addEventListener('mousemove',(event)=>{
+
+    for(let i =0; i<boxes.length; i++){
+    boxes[i].testMove(event);
+
+    }
+
+  });
+
+  canvas.addEventListener('mouseup',(event)=>{
+
+    for(let i =0; i<boxes.length; i++){
+      boxes[i].hitTestOff();
+    }
+
+  });
+
+  // recursive call ...
+  requestAnimationFrame(runAni);
+
+
+  function runAni(){
+    //need to reset the background :)
+    // clear the canvas ...
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i =0; i< boxes.length;i++){
+      //myEllipses[i].update();
+    boxes[i].renderBox();
+
+    }
+
+    // recursive call ...
+    requestAnimationFrame(runAni);
+  }
+
+  function AudioBox(x,y,w,h,c,initId){
+    this.xPos = x;
+    this.yPos = y;
+    this.boxWidth = w;
+    this.boxHeight = h;
+    this.boxColor = c;
+    this.boxId = initId;
+    this.currentBoxHeight =5;
+    this.isPressed =false;
+    this.freqVal =  220+(initId*128);
+    this.note = new Sound(audioContext); //make an instance...
+
+
+
+    this.renderBox = function(){
+      // NEED TO USE OUR "graphics context" for drawing::
+      canvasContext.strokeStyle = c; // change the color we are using
+      canvasContext.fill(); // set the fill
+      canvasContext.strokeRect(this.xPos,this.yPos,this.boxWidth,this.boxHeight);
+
+
+      canvasContext.fillStyle = c; // change the color we are using
+      canvasContext.fill(); // set the fill
+      canvasContext.fillRect(this.xPos,(this.yPos+this.boxHeight)-this.currentBoxHeight,this.boxWidth,this.currentBoxHeight);
+
+      canvasContext.fillStyle = "#000000";// change the color we are using
+      canvasContext.beginPath();
+      canvasContext.arc(this.xPos,this.yPos+this.boxHeight,2,0, Math.PI * 2, true);
+      canvasContext.fill(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+    this.hitTest = function(){
+      if(event.clientX>this.xPos && event.clientX<this.xPos+this.boxWidth &&
+      event.clientY>this.yPos && event.clientY<this.yPos+this.boxHeight){
+        this.isPressed =true;
+        console.log(`${this.boxId} was clicked`);
+        let now = audioContext.currentTime;
+        this.note.offsetDuration =3;
+        this.note.play(this.freqVal, now);
+        //each one has their own
+
+      }
+      else{
+        this.isPressed =false;
+      }
+    }
+
+    this.hitTestOff = function(){
+      if (this.isPressed ===true){
+        // to turn off -> we need to stop & disconnect
+        this.isPressed =false;
+
+      }
+    }
+
+    this.testMove = function(event){
+      if(this.isPressed ===true){
+        //the current yPos of the filled box
+        let cY = (this.yPos+this.boxHeight)-this.currentBoxHeight;
+        //difference between current yPos and mouse y
+        let offsetY = cY-event.clientY;
+          if(this.currentBoxHeight+offsetY <= this.boxHeight && this.currentBoxHeight+offsetY >=5  ){
+            this.currentBoxHeight+=(offsetY);
+            this.freqVal+=(offsetY*2);
+
+
+          }
+        }
+      }
+    }
+
+    /*** class for sound  inspired and copy-lefted from::
+    https://css-tricks.com/introduction-web-audio-api/*/
+  function Sound (context) {
+    this.context = context;
+    this.offsetDuration =0;
+
+
+  this.init =function () {
+    this.oscillator = this.context.createOscillator();
+    //for volume
+    this.gainNode = this.context.createGain();
+
+    this.oscillator.connect(this.gainNode);
+    this.gainNode.connect(this.context.destination);
+    this.oscillator.type = 'sine';
+  }
+
+  this.play = function (value, time) {
+    this.init();
+
+    this.oscillator.frequency.value = value;
+    //set gain
+    this.gainNode.gain.setValueAtTime(1, this.context.currentTime);
+
+    this.oscillator.start(time);
+    // How LONG should duration of note be?
+    this.stop(time+this.offsetDuration);
+
+  }
+
+
+    this.stop = function(time) {
+    // gradual change in value
+    this.gainNode.gain.exponentialRampToValueAtTime(0.001, time + 1);
+    this.oscillator.stop(time + 0);
+    }
+  }//end SOund object
+}
+
+</script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

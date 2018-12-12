@@ -1,0 +1,135 @@
+
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+
+  window.onload = function(){
+/*https://css-tricks.com/manipulating-pixels-using-canvas */
+    // step 1 access the canvas element && the graphics context....
+    let canvas = document.getElementById('testCanvas');
+    let canvasContext = canvas.getContext('2d');
+
+    let im = new Image();
+    im.src = 'images/test.jpg';
+    // NEW :: need to ensure that the image gets loaded ...
+    im.onload = function(){
+
+    let imagetest = new imageContainer(im,canvas.width/2,canvas.height/2);
+    let x =0; //temp variable for our rect  -> ensure that animation still works
+    requestAnimationFrame(runAni);
+
+      function runAni(){
+
+          canvasContext.clearRect(0,0,canvas.width,canvas.height);
+          imagetest.renderImage(); //render
+          /** arbitrary obj animating **/
+          canvasContext.fillStyle = "#8ED6FF"; // change the color we are using
+          canvasContext.fill(); // set the fill
+          canvasContext.fillRect(x,0,50,50); //draw a filled rect
+          x++;
+          requestAnimationFrame(runAni);
+        }
+
+
+  function imageContainer(ref, x,y){
+    // need to make a new Image continer ...
+    this.imageEl = ref;
+    //this.imageEl.src = imgPath;
+    this.xPos =x;
+    this.yPos =y;
+    this.w = this.imageEl.width;
+    this.h = this.imageEl.height;
+    this.isPressed =false;
+    this.count =255;
+
+
+    this.renderImage = function(){
+      //optional parameters(2 last - for w and height)
+      //img.width & img.height gives use the actual w and h of the image ...
+      //x and y is in corner for draw image ...
+     canvasContext.drawImage(this.imageEl,this.xPos-this.w/4 ,this.yPos-this.h/4,this.w/2,this.h/2);
+      //let imageData = canvasContext.getImageData(this.xPos-this.w/4 ,this.yPos-this.h/4,this.w/2,this.h/2);
+      //canvasContext.putImageData(imageData, this.xPos-this.w/4 ,this.yPos-this.h/4);
+  }
+
+    this.manipulateImage = function(){
+      //get the image data from the canvas -> note here we are accessing the region only where the image resides...
+      /*The image data on the canvas allows us to manipulate and change the pixels.*/
+      /*The result is an ImageData object with three properties — the width, height and data
+
+      The one we care about is data, n one-dimensional array represented by an Uint8ClampedArray object,
+      containing the data of each pixel in a RGBA format.
+      // we can iterate through this array and change the values within ...
+      */
+      this.count -=1;
+      let imageData = canvasContext.getImageData(this.xPos-this.w/4 ,this.yPos-this.h/4,this.w/2,this.h/2);
+      for(let i = 0; i< imageData.data.length; i+=4){
+        //why +=4 because for each pixel => we have 4 consecutive elements in the array
+        //has RGB and A values... (between 0 and 255 ... )
+        imageData.data[i]=imageData.data[i]; //keep same
+        imageData.data[i+1]=imageData.data[i+1];//keep same
+        imageData.data[i+2]=imageData.data[i+2];//keep same
+        //change only the alpha
+        //imageData.data[i+3]=125;
+        imageData.data[i+3]=this.count;
+      }
+
+         // create NEW image element
+         this.imageEl = new Image();
+         //make a copy of the previous image ...
+         this.imageEl.src = makeACopy(imageData,this.w/2,this.h/2,this.xPos-this.w/4 ,this.yPos-this.h/4);
+
+
+    }
+    this.hitTest = function(event){
+      let x= this.xPos-this.w/4;
+      let y = this.yPos-this.h/4;
+      if(event.clientX>x&& event.clientX<x+this.w/2 &&
+        event.clientY>y&& event.clientY<y+this.h/2){
+        this.manipulateImage();
+        }
+    }
+
+  }// end image object
+
+//helper function
+  function makeACopy(imgData,width, height,x,y) {
+   let canvasCopy = document.createElement('canvas');
+   let ctx = canvasCopy.getContext('2d');
+   canvasCopy.width = width;
+   canvasCopy.height = height;
+   ctx.putImageData(imgData, 0, 0);
+   return canvasCopy.toDataURL(); //image URL
+}
+
+
+  canvas.addEventListener("mousemove",(event)=>{
+  //console.log("Image was clicked");
+  imagetest.hitTest(event);
+  });
+
+}
+
+  //end on windowload
+}
+
+</script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

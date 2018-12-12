@@ -1,0 +1,101 @@
+<!--https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API -->
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+
+  window.onload = function(){
+
+    // step 1 access the canvas element && the graphics context....
+    let canvas = document.getElementById('testCanvas');
+    let canvasContext = canvas.getContext('2d');
+
+    let textN = new myTextNode();
+
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      let audioContext = new AudioContext();
+
+      navigator.mediaDevices.getUserMedia({audio: true})
+      .then(
+        //stream is what is returned
+        (stream) =>
+      {
+        //returns a MediaStreamAudioSourceNode.
+        const microphoneIn = audioContext.createMediaStreamSource(stream);
+        const filter = audioContext.createBiquadFilter();
+        const analyser = audioContext.createAnalyser();
+          // microphone -> filter ->  analyzer->destination
+          microphoneIn.connect(filter);
+        //use the analyzer object to get some properties ....
+        filter.connect(analyser);
+
+        //we do not need a destination (out)
+        //analyser.connect(audioContext.destination);
+        analyser.fftSize = 32;
+        let frequencyData = new Uint8Array(analyser.frequencyBinCount);
+
+        //call loop ...
+         requestAnimationFrame (callBackLoop);
+
+         /****our looping callback function */
+         function callBackLoop(){
+          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+           analyser.getByteFrequencyData(frequencyData);
+           let average =0;
+           let sum=0;
+           for(let i = 0; i<frequencyData.length; i++){
+             sum+=frequencyData[i];
+           }
+           average = sum/frequencyData.length;
+           console.log(average);
+           textN.render();
+           textN.update(average);
+           requestAnimationFrame(callBackLoop);
+
+         }
+    })
+
+  .catch(function(err) {
+  /* handle the error */
+  console.log("ERR NO SOUND?");
+});
+
+
+      function myTextNode(){
+        this.fontString = "30px Arial";
+
+
+        this.render = function(){
+        canvasContext.font = this.fontString;
+        canvasContext.fillStyle = "#FFFFFF";
+        canvasContext.fillText("Hello World",canvas.width/2-100,canvas.height/2);
+      }
+
+      this.update =function(input){
+        let fontArgs = this.fontString.split(' ');
+        let newSize = input+'px';
+        this.fontString = newSize + ' ' + fontArgs[fontArgs.length - 1];
+
+      }
+    }
+  }
+
+</script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>

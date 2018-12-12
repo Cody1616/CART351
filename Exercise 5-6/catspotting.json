@@ -1,33 +1,95 @@
   {
     "Label":"Cody's Catspotting Log",
-    "Sublabel":"The cats I've met in MTL",
+    "Sublabel":"Cats!",
     "Days":
       {
           "Cats Spotted": 2,
           "Cat1":
                 {
-                  "Image":"url",
-                  "Sex":"Female",
-                  "Appearance":"Grey Tabby",
+                  "Image":"cat_img/20170817.jpg",
+                  "Sex":"???",
+                  "Appearance":"Black",
                   "Eyes":"Green",
                   "Name":"???",
-                  "Location":"Sidewalk, Le Plateau",
-                  "Time": "3:45PM",
-                  "Description":"Super talkative, followed me for a block or so"
+                  "Location":"Montreal",
+                  "Time": "9:37PM",
+                  "Date": "2017-08-17",
+                  "Description":"I encountered a black cat, but did not feel unlucky at all!"
 
             },
-            "Cat2":
+          "Cat2":
                   {
-                    "Image":"url",
+                    "Image":"cat_img/20170903.jpg",
                     "Sex":"Male",
-                    "Appearance":"Black&White",
-                    "Eyes":"Orange",
+                    "Appearance":"Grey Tabby",
+                    "Eyes":"Green",
+                    "Name":"???",
+                    "Location":"Montreal",
+                    "Time": "11:40PM",
+                    "Date": "2017-09-13",
+                    "Description":"Was at a cat cafe, he was a new cat and tried to eat my sandwich."
+              },
+          "Cat3":
+                    {
+                      "Image":"cat_img/20180125.jpg",
+                      "Sex":"Female",
+                      "Appearance":"Tabby",
+                      "Eyes":"Green",
+                      "Name":"Misty",
+                      "Location":"Quebec",
+                      "Time": "11:43PM",
+                      "Date": "2018-01-25",
+                      "Description":"My aunt's cat, Misty."
+                },
+          "Cat4":
+                      {
+                        "Image":"cat_img/20180704.jpg",
+                        "Sex":"???",
+                        "Appearance":"Orange and white",
+                        "Eyes":"???",
+                        "Name":"???",
+                        "Location":"Montreal",
+                        "Time": "9:57PM",
+                        "Date": "2018-07-04",
+                        "Description":"Lazy"
+                  },
+          "Cat5":
+                        {
+                          "Image":"cat_img/20180715.jpg",
+                          "Sex":"Female",
+                          "Appearance":"Grey and white",
+                          "Eyes":"Green",
+                          "Name":"Puffin",
+                          "Location":"Dollard-des-Ormeaux",
+                          "Time": "10:52PM",
+                          "Date": "2018-07-15",
+                          "Description":"Puffin is shy around visitors, and extremely fluffy."
+                    },
+          "Cat6":
+                          {
+                            "Image":"cat_img/20180802.jpg",
+                            "Sex":"Female",
+                            "Appearance":"Calico",
+                            "Eyes":"Green",
+                            "Name":"???",
+                            "Location":"Montreal",
+                            "Time": "4:48PM",
+                            "Date": "2018-08-02",
+                            "Description":"Came to greet me while I was moving out, I guess she wanted to say goodbye?"
+                      },
+            "Cat6":
+                      {
+                    "Image":"cat_img/20180815.jpg",
+                    "Sex":"Male",
+                    "Appearance":"Tuxedo",
+                    "Eyes":"Green",
                     "Name":"Currie",
-                    "Location":"Hanging out on a windowsill, Hampstead",
-                    "Time": "6:18PM",
-                    "Description":"A friend's cat,
-                    prone to running around, seems unable to meow,
-                    only squeaks"
-              }
+                    "Location":"Montreal",
+                    "Time": "7:49PM",
+                    "Date": "2018-08-15",
+                    "Description":"A friend's cat. He's very squeaky and is prone to run around for seemingly no reason."
+                                  },
+
+
       }
   }

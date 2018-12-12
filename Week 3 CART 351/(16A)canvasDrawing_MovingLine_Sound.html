@@ -1,0 +1,170 @@
+<html>
+<head>
+  <title> Canvas Tutorial </title>
+  <style>
+  body{
+    margin:0;
+    padding:0;
+  }
+  canvas{
+    background:black;
+    margin:0;
+    padding:0;
+  }
+  </style>
+  <script>
+  /*** THIS EX SHOWS THE BASIC SETUP ****/
+  //only run this once the window loads
+  window.onload = function(){
+
+// step 1 access the canvas element && the graphics context....
+let canvas = document.getElementById('testCanvas');
+let canvasContext = canvas.getContext('2d');
+
+// max number ellipses
+const MAX_LINES =25;
+//array to hold objects
+let myLineList = [];
+//make some possible colors
+let colors = ["#8ED6FF","#c379e5","#e22626","#61f495","#4953c1","#ffb807","#ffc907"];
+
+
+
+
+canvas.addEventListener('mouseup',(event)=>{
+for(let i=0; i< myLineList.length; i++){
+  myLineList[i].hitTest(event);
+}
+});
+
+canvas.addEventListener('mousemove',(event)=>{
+for(let i=0; i< myLineList.length; i++){
+  myLineList[i].moveTest(event);
+}
+});
+
+
+//x,y,changeInX,changeInY,color,xSpeed,ySpeed -> moves on x (purple)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,0,colors[1],50,0));
+// moves on y (red)
+myLineList.push(new myLine(canvas.width/2,canvas.height/2+80,0,1,colors[2],0,40));
+
+myLineList.push(new myLine(canvas.width/2+80,canvas.height/2+80,0,1,colors[4],0,40));
+
+myLineList.push(new myLine(canvas.width/2,canvas.height/2+200,0,1,colors[0],0,40));
+
+myLineList.push(new myLine(canvas.width/2+200,canvas.height/2+200,0,1,colors[6],0,40));
+
+myLineList.push(new myLine(canvas.width/2+50,canvas.height/2-200,0,1,colors[6],0,40));
+//moves on x and y (green)
+//myLineList.push(new myLine(canvas.width/2,canvas.height/2,1,1,colors[3],5,1));
+
+requestAnimationFrame(runAni);
+
+// this is our callback function (to simulate a loop ... )
+function runAni(){
+  //need to reset the background :)
+  // clear the canvas ...
+  for (let i =0; i< myLineList.length;i++){
+
+//check if we have a delay running -> why? because of the mouse over ...
+//new ...
+  if(myLineList[i].timerRunning ===true){
+    myLineList[i].currentTime = new Date().getTime()- myLineList[i].startTimer;
+    if(myLineList[i].currentTime>1000){
+      myLineList[i].timerRunning =false;
+    }
+
+  }
+} //end check
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+
+  // go through each object and perform required ops
+  //here we only go through for how many objects we have
+  for (let i =0; i< myLineList.length;i++){
+    myLineList[i].render();
+
+  }
+  // recursive call ...
+  requestAnimationFrame(runAni);
+}
+
+/*** MY LINE OBJECT ***/
+function myLine(x,y,lengthX,lengthY,c,xSpeed,ySpeed){
+  //member variables
+  this.xPos = x;
+  this.yPos = y;
+  this.changeInX = lengthX;
+  this.changeInY = lengthY;
+  this.lineColor = c;
+
+  // new for updating
+  this.xSpeed = xSpeed;
+  this.ySpeed =ySpeed;
+
+  this.maxXLength=100;
+  this.maxYLength=100;
+    //new
+  this.ellRadius =2;
+  this.isPressed =false;
+  this.timerRunning =false;
+  this.startTimer=0;
+  this.currentTime =0;
+
+//member function
+  this.render =function(){
+      canvasContext.beginPath();
+      canvasContext.moveTo(this.xPos,this.yPos); //where to start
+      canvasContext.lineTo(this.xPos+this.changeInX,this.yPos+this.changeInY); //where are we going
+      //point from -> to
+      canvasContext.strokeStyle = this.lineColor;// change the color we are using
+      canvasContext.lineWidth=2; //change stroke weight
+      canvasContext.stroke(); // set the fill
+      canvasContext.closePath(); //close a path ...
+
+      canvasContext.beginPath();
+      // arc (x,y,radius, startAngle,endAngle,isCounterClockwise)
+      canvasContext.fillStyle = this.lineColor;// change the color we are using
+      canvasContext.arc(this.xPos+this.changeInX,this.yPos+this.changeInY,this.ellRadius,0,Math.PI*2, true);
+      canvasContext.fill(); // set the fill
+      canvasContext.closePath(); //close a path ...
+    }
+
+      //member function for updating
+      this.hitTest= function(event){
+        if(this.timerRunning ===false){
+        if(Math.sqrt(Math.pow((event.clientX-(this.xPos+this.changeInX)),2) + Math.pow((event.clientY - (this.yPos+this.changeInY)),2))< this.ellRadius){
+          console.log(`ellipse hit`);
+         this.isPressed =false;
+         //start the timer on mouseDown :)
+         this.startTimer = new Date().getTime();
+         //set timer running
+         this.timerRunning =true;
+       }
+     }
+   }
+   this.moveTest = function(){
+     if(this.timerRunning ===false){
+     if(Math.sqrt(Math.pow((event.clientX-(this.xPos+this.changeInX)),2) + Math.pow((event.clientY - (this.yPos+this.changeInY)),2))< this.ellRadius){
+       console.log(`ellipse hit`);
+       this.isPressed =true;
+       }
+      if(this.isPressed===true){
+        //NEW:::calculate how to change the line (move with the mouse)
+       this.changeInX = (event.clientX-this.xPos);
+       this.changeInY = (event.clientY-this.yPos);
+      }
+    } //timer
+   }
+  } //end myLine
+
+}//end window onload
+  </script>
+</head>
+<body>
+<canvas id="testCanvas" width="500" height="500">
+
+</canvas>
+</body>
+</html>
