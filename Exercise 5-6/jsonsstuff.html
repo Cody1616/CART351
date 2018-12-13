@@ -73,10 +73,10 @@
 
        // .text() function?
        // .append()
+       $(sampleH2).text(cats[i].Name);
        $(sampleIMG).attr('src', cats[i].Image);
        $(sampleIMG).attr('width', "500px");
        $(sampleIMG).attr('height', "500px");
-       $(sampleH2).text(cats[i].Name);
        console.log(cats[i].Name);
        $(samplePara1).text("Sex: "+cats[i].Sex);
        //$(samplePara1).text(cats[i].Appearance);
@@ -167,8 +167,8 @@
 
   h2 {
     font-size: 2.5rem;
-    letter-spacing: -5px;
-    margin-bottom: 10px;
+    /* letter-spacing: -5px;
+    margin-bottom: 10px; */
   }
   #getData{
     background:orange;

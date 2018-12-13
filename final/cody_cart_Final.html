@@ -458,19 +458,19 @@
               //reponse is a STRING (not a JavaScript object -> so we need to convert)
               console.log(response);
               notes.push(new musicNote(placePreview.xPos, placePreview.r, startTime+timePassed));
-              let fTitle = "Created by " + data.get('user') + " on " + nowD.toString() + ".";
+
               let noteCount = notes.length-1;
               notes[noteCount].pic = document.createElement("IMG");
               //console.log("test:: "+data.get('shape'));
               let iconSource = getIcons(parseInt(data.get("color")), parseInt(data.get('shape')));
             //  console.log(iconSource);
+              notes[noteCount].description = "Created by " + data.get('user') + " on " + nowD.toString() + ".";
               notes[noteCount].pic.setAttribute("src", iconSource);
-
               notes[noteCount].pic.setAttribute("width", "20px");
               notes[noteCount].pic.setAttribute("height", "20px");
               notes[noteCount].stringID = "flower"+noteCount;
               notes[noteCount].pic.setAttribute("ID", notes[noteCount].stringID);
-              notes[noteCount].pic.setAttribute("title", fTitle);
+              //notes[noteCount].pic.setAttribute("title", fTitle);
               document.getElementById('NotesCanvas').appendChild(notes[noteCount].pic);
               console.log("xpos: "+notes[noteCount].xPos+" row: "+notes[noteCount].row);
               //use the JSON .parse function to convert the JSON string into a Javascript object
